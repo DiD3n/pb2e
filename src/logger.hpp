@@ -8,9 +8,13 @@
 
 #ifdef DEBUG
 #define log(args...) _raw(args, " :", __FILE__, "\b:",__LINE__)
+
 #define logError(args...) if('\0' != *SDL_GetError()){\
-_raw(args, " at", __FILE__, "\b:", __LINE__, "\n", SDL_GetError());SDL_ClearError();}else \
+_raw(args, " at", __FILE__, "\b:", __LINE__, "\n", SDL_GetError());\
+SDL_ClearError();\
+}else \
 _raw(args, " at", __FILE__, "\b:",__LINE__)
+
 #else
 #define log(args...);
 #define logError(args...);

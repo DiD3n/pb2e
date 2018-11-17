@@ -1,3 +1,4 @@
+#pragma once
 /* SDL 2.0 and newer are available under the zlib license :
 
 This software is provided 'as-is', without any express or implied
