@@ -29,7 +29,7 @@ unsigned int compileShader(int type, const std::string& source) {
 int main(int argc, char *argv[]) {
     
     SDL_Window* window = NULL;
-    window = SDL_CreateWindow("title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("openGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
     if (!window) {
         logError("SDL_CreateWindow");
     } else {
@@ -45,35 +45,38 @@ int main(int argc, char *argv[]) {
                 if( SDL_GL_SetSwapInterval( 1 ) < 0 ) {
 					logError("Vsync problem");
 				}
+
+                /////////////
+                //Buffer
+
                 float vertexData[] = {
-                    -0.5f,  0.7f, 
-                     0.0f, -0.9f, 
-                     0.1f, -0.7f,
+                     0.0f,  0.5f , 0.9,0.0,0.0,
+                    -0.5f, -0.5f , 0.0,0.9,0.0,
+                     0.5f, -0.5f , 0.0,0.0,0.9,
 
-                     0.9f, -0.8f,
-                    -0.5f,  0.7f, 
-                     0.0f, -0.1f, 
-
-                     0.4f, -0.7f,
-                     0.9f, -0.8f, 
-                     0.8f,  0.9f, 
-                     
-                    -0.8f,  0.2f,
-                     0.8f,  0.9f, 
-                    -0.8f,  0.2f,
-
-                     0.1f, -0.7f,
-                     0.9f, -0.8f,
-                    -0.5f,  0.7f
+                     0.0f, -0.5f , 0.5,0.2,0.6,
+                     0.5f,  0.5f , 0.1,0.9,0.4,
+                    -0.5f,  0.5f , 0.9,0.5,0.9,
                 };
+
+                ////////////
+                //Buffer Stuff
 
                 unsigned int VBO;
                 glGenBuffers(1,&VBO);
                 glBindBuffer(GL_ARRAY_BUFFER, VBO );
                 glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_DYNAMIC_DRAW);
-                log(sizeof(vertexData));
-                glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,/*2*sizeof(float)*/0,0);
+                glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,5*sizeof(float),0);
                 glEnableVertexAttribArray(0);
+                glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,5*sizeof(float),(const void*)(2*sizeof(float)));
+                glEnableVertexAttribArray(1);
+
+                {
+                    unsigned int err = glGetError();
+                    if (err)
+                        std::cout << err;
+                }
+
 
                 //////////
                 //shader
@@ -106,18 +109,12 @@ int main(int argc, char *argv[]) {
                 glLinkProgram(program);
                 glUseProgram(program);
                 
-                {
-                    unsigned int err = glGetError();
-                    if (err)
-                        std::cout << err;
-                }
-
+                //checking errors
                 while(unsigned int err = glGetError()) {
                     std::cout << err << " Shader" << "\n";
                 }
                     
                 bool end = false;
-                std::cout << "Start While";
                 while (!end) {
                     SDL_Event ev;
                     while (SDL_PollEvent(&ev)) {
@@ -138,10 +135,10 @@ int main(int argc, char *argv[]) {
                     glClear(GL_COLOR_BUFFER_BIT);
 
                     unsigned int ibo[] = {
-                        1,2,3, 4,5,6, 7,8,9, 10,11,12, 13,14,15
+                        0,1,2,3,4,5
                     };
-                    glDrawElements( GL_TRIANGLES, 16,GL_UNSIGNED_INT,&ibo);
-                    //glDrawArrays(GL_LINE_STRIP_ADJACENCY,0,12);
+                    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &ibo);
+                    //glDrawArrays(GL_TRIANGLES,0,6);
                     SDL_GL_SwapWindow( window );
                 }
             }
