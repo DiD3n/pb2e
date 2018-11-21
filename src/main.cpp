@@ -5,6 +5,8 @@
 #include "logger.hpp"
 #include "include/glew.hpp"
 
+#include "gl/VertexBufferLayout.hpp"
+
 unsigned int compileShader(int type, const std::string& source) {
     unsigned int shader = glCreateShader(type);//GL_FRAGMENT_SHADER
     std::string shaderSource = source;
@@ -27,7 +29,15 @@ unsigned int compileShader(int type, const std::string& source) {
 }
 
 int main(int argc, char *argv[]) {
+
     
+    gl::VertexBufferLayout vbf;
+    vbf << gl::LayoutElement(2) << gl::LayoutElement(3 ,GL_UNSIGNED_BYTE, true);
+    log(vbf.getStride());
+    log(vbf.getElementsCount());
+    log(vbf.getStringSchemat());
+
+
     SDL_Window* window = NULL;
     window = SDL_CreateWindow("openGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
     if (!window) {
