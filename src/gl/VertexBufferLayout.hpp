@@ -59,7 +59,7 @@ namespace gl {
 
         VertexBufferLayout& push(unsigned int count, unsigned int type = GL_FLOAT, bool normalized = false);
 
-        std::string getStringSchemat() const;
+        std::string getScheme() const;
         
         constexpr unsigned int getStride() const { return this->stride; }
 

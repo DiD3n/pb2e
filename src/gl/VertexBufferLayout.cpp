@@ -30,7 +30,7 @@ namespace gl {
         return *this;
     }
 
-    std::string VertexBufferLayout::getStringSchemat() const {
+    std::string VertexBufferLayout::getScheme() const {
         std::string tmp = "";
         for (const LayoutElement& i : list) {
             if (tmp != "")
