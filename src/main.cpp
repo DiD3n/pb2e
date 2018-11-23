@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
                 gl::VertexBuffer buffer(layout, true);
                 //buffer.clear();
                 buffer.push( 0.0f,  0.5f , 0.9f,0.0f,0.0f);
-                buffer.push( 0.0f,  0.5f , 0.9f,0.0f,0.0f);
+                buffer.push(-0.5f,  0.5f , 0.0f,0.9f,0.0f);
                 buffer.push( 0.5f, -0.5f , 0.0f,0.0f,0.9f);
                 buffer.push( 0.0f, -0.5f , 0.5f,0.2f,0.6f);
                 buffer.push( 0.5f,  0.5f , 0.1f,0.9f,0.4f);                
