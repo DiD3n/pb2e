@@ -17,6 +17,6 @@ target_link_libraries(pb2e -lSDL2)
 target_link_libraries(pb2e -lSDL2_image)
 #target_link_libraries(pb2e -lSDL2_mixer)
 target_link_libraries(pb2e -lSDL2_ttf)
-target_link_libraries(pb2e -lglew32s -lOpenGL32 -lGLU32)
+target_link_libraries(pb2e -lglew32s -lOpenGL32 -lGLU32 -static-libgcc -static-libstdc++)
 
 target_link_libraries(pb2e)

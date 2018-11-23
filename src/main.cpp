@@ -47,55 +47,19 @@ int main(int argc, char *argv[]) {
                 logError("glewInit");
             } else {
                 if( SDL_GL_SetSwapInterval( 1 ) < 0 ) {
-					logError("Vsync problem");
+					logError("Vsync problem!");
 				}
-
-                /////////////
-                //Buffer
-
-
-                //float vertexData[] = {
-                //     0.0f,  0.5f , 0.9,0.0,0.0,
-                //    -0.5f, -0.5f , 0.0,0.9,0.0,
-                //     0.5f, -0.5f , 0.0,0.0,0.9,
-                //     0.0f, -0.5f , 0.5,0.2,0.6,
-                //     0.5f,  0.5f , 0.1,0.9,0.4,
-                //    -0.5f,  0.5f , 0.9,0.5,0.9,
-                //};
 
                 gl::VertexBufferLayout layout;
                 layout << gl::LayoutElement(2) << gl::LayoutElement(3);//,GL_UNSIGNED_BYTE,true);
+
                 gl::VertexBuffer buffer(layout, true);
-                //buffer.clear();
-                buffer.push( 0.0f,  0.5f , 0.9f,0.0f,0.0f);
-                buffer.push(-0.5f,  0.5f , 0.0f,0.9f,0.0f);
-                buffer.push( 0.5f, -0.5f , 0.0f,0.0f,0.9f);
-                buffer.push( 0.0f, -0.5f , 0.5f,0.2f,0.6f);
-                buffer.push( 0.5f,  0.5f , 0.1f,0.9f,0.4f);                
-                buffer.push(-0.5f,  0.5f , 0.9f,0.5f,0.9f);
+                buffer.push(-0.9f,  0.9f , 0.9f,0.0f,0.0f);
+                buffer.push( 0.9f,  0.9f , 0.0f,0.9f,0.0f);
+                buffer.push(-0.9f, -0.9f , 0.0f,0.0f,0.9f);
+                buffer.push( 0.9f, -0.9f , 0.9f,0.9f,0.6f);           
+                
                 buffer.bind();
-
-                ////////////
-                //Buffer Stuff
-
-                //unsigned int VBO;
-                //glGenBuffers(1,&VBO);
-                //glBindBuffer(GL_ARRAY_BUFFER, VBO );
-                //glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_DYNAMIC_DRAW);
-                //glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,5*sizeof(float),0);
-                //glEnableVertexAttribArray(0);
-                //glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,5*sizeof(float),(const void*)(2*sizeof(float)));
-                //glEnableVertexAttribArray(1);
-
-                {
-                    unsigned int err = glGetError();
-                    if (err)
-                        std::cout << err;
-                }
-
-
-                //////////
-                //shader
 
                 unsigned int program = glCreateProgram();
 
@@ -125,52 +89,43 @@ int main(int argc, char *argv[]) {
                 glLinkProgram(program);
                 glUseProgram(program);
                 
-                //checking errors
                 while(unsigned int err = glGetError()) {
-                    std::cout << err << " Shader" << "\n";
+                    std::cout << err << "\n";
                 }
-                    
+
                 bool end = false;
                 while (!end) {
+
                     SDL_Event ev;
                     while (SDL_PollEvent(&ev)) {
                         switch (ev.type) {
-                            case SDL_QUIT:
+                        case SDL_QUIT:
                             end = true;
+                            break;
+                        case SDL_WINDOWEVENT:
+                            switch (ev.window.event) {
+                            case SDL_WINDOWEVENT_SIZE_CHANGED:
+                                glViewport(0, 0, ev.window.data1, ev.window.data2);
+                                break;
+                            }
                             break;
                         }
                     }
-                    int windowWidth, windowHeight;
-                    SDL_GetWindowSize(window, &windowWidth, &windowHeight);
-                    glViewport(0, 0, windowWidth, windowHeight);
-                    {
-                        unsigned int err = glGetError();
-                        if (err)
-                            std::cout << err;
-                    }
                     glClear(GL_COLOR_BUFFER_BIT);
-
-                    unsigned int ibo[] = {
-                        0,1,2,3,4,5
-                    };
-                    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &ibo);
-                    glDrawArrays(GL_TRIANGLES,0,3);
+                    
+                    unsigned int ibo[] = { 0,1,2,3,1,2 };
+                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, &ibo);
+                    
+                    //glDrawArrays(GL_TRIANGLES,0, buffer.getDataCount());
                     SDL_GL_SwapWindow( window );
+
+                    while (unsigned int err = glGetError())
+                        std::cout << err << '\n';
                 }
             }
-            SDL_GL_DeleteContext(context);
         }
-        SDL_DestroyWindow(window);
+        SDL_GL_DeleteContext(context);
     }
-    std::cin.get();
+    SDL_DestroyWindow(window);
     return EXIT_SUCCESS;
-}
-
-
-int a(int a) {
-    if (a < 5) {
-        return 0;
-    } else {
-        return a;
-    }
 }

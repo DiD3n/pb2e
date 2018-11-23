@@ -6,24 +6,20 @@
 #include "../include/glew.hpp"
 
 template<typename T> 
-static constexpr unsigned int sizeOfMulti(const T& arg) {
-    return sizeof(arg);
-}
+static unsigned int sizeOfMulti(const T& arg) { return sizeof(arg);}
 
 template<typename T, typename ... T2> 
-static constexpr unsigned int sizeOfMulti(const T& arg,const T2&... args) {
-    return sizeOfMulti(args...) + sizeof(arg);
-}
+static unsigned int sizeOfMulti(const T& arg,const T2&... args) { return sizeOfMulti(args...) + sizeof(arg); }
 
 
 
 template<typename T> 
-static constexpr void pushData(void* data, unsigned int byte, const T& arg) {
+static void pushData(void* data, unsigned int byte, const T& arg) {
     memcpy((data)+byte,&arg,sizeof(arg));
 }
 
 template<typename T, typename ... T2> 
-static constexpr void pushData(void* data, unsigned int byte, const T& arg,const T2&... args) {//static_cast<void*>
+static void pushData(void* data, unsigned int byte, const T& arg,const T2&... args) {
     memcpy((data)+byte,&arg,sizeof(arg));
     pushData(data,byte + sizeof(arg), args...);
 }
@@ -54,6 +50,7 @@ namespace gl {
         }
 
         constexpr bool isLegit() {return legit;}
+        constexpr unsigned int getDataCount() {return dataSize/vbl->stride;}
 
         VertexBuffer& clear();
 
@@ -62,14 +59,3 @@ namespace gl {
     };
 
 };
-
-//int mm() {
-//    gl::VertexBufferLayout vbf;
-//    vbf << gl::LayoutElement(2) << gl::LayoutElement(3 ,GL_UNSIGNED_BYTE, true);
-//    
-//    gl::VertexBuffer buffer(vbf);
-//    buffer.push(0.5,0.1,0.0,0.0,0.9).push(0.1,0.1,0.7,0.9,0.0);
-//}
-//
-//
-//
