@@ -11,9 +11,9 @@ namespace gl {
     class VertexBuffer;
 
     struct LayoutElement {
-        unsigned int count;
-        unsigned int type;
-        bool normalized;
+        unsigned int count = 0;
+        unsigned int type = 0;
+        bool normalized = false;
 
         unsigned int getTypeSize() const { //v1.1
 

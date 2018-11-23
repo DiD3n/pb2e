@@ -6,6 +6,7 @@
 #include "include/glew.hpp"
 
 #include "gl/VertexBufferLayout.hpp"
+#include "gl/VertexBuffer.hpp"
 
 unsigned int compileShader(int type, const std::string& source) {
     unsigned int shader = glCreateShader(type);//GL_FRAGMENT_SHADER
@@ -30,13 +31,6 @@ unsigned int compileShader(int type, const std::string& source) {
 
 int main(int argc, char *argv[]) {
 
-    
-    gl::VertexBufferLayout vbf;
-    vbf << gl::LayoutElement(2) << gl::LayoutElement(3 ,GL_UNSIGNED_BYTE, true);
-    log(vbf.getStride());
-    log(vbf.getElementsCount());
-    log(vbf.getStringSchemat());
-
 
     SDL_Window* window = NULL;
     window = SDL_CreateWindow("openGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
@@ -59,27 +53,39 @@ int main(int argc, char *argv[]) {
                 /////////////
                 //Buffer
 
-                float vertexData[] = {
-                     0.0f,  0.5f , 0.9,0.0,0.0,
-                    -0.5f, -0.5f , 0.0,0.9,0.0,
-                     0.5f, -0.5f , 0.0,0.0,0.9,
 
-                     0.0f, -0.5f , 0.5,0.2,0.6,
-                     0.5f,  0.5f , 0.1,0.9,0.4,
-                    -0.5f,  0.5f , 0.9,0.5,0.9,
-                };
+                //float vertexData[] = {
+                //     0.0f,  0.5f , 0.9,0.0,0.0,
+                //    -0.5f, -0.5f , 0.0,0.9,0.0,
+                //     0.5f, -0.5f , 0.0,0.0,0.9,
+                //     0.0f, -0.5f , 0.5,0.2,0.6,
+                //     0.5f,  0.5f , 0.1,0.9,0.4,
+                //    -0.5f,  0.5f , 0.9,0.5,0.9,
+                //};
+
+                gl::VertexBufferLayout layout;
+                layout << gl::LayoutElement(2) << gl::LayoutElement(3);//,GL_UNSIGNED_BYTE,true);
+                gl::VertexBuffer buffer(layout, true);
+                //buffer.clear();
+                buffer.push( 0.0f,  0.5f , 0.9f,0.0f,0.0f);
+                buffer.push( 0.0f,  0.5f , 0.9f,0.0f,0.0f);
+                buffer.push( 0.5f, -0.5f , 0.0f,0.0f,0.9f);
+                buffer.push( 0.0f, -0.5f , 0.5f,0.2f,0.6f);
+                buffer.push( 0.5f,  0.5f , 0.1f,0.9f,0.4f);                
+                buffer.push(-0.5f,  0.5f , 0.9f,0.5f,0.9f);
+                buffer.bind();
 
                 ////////////
                 //Buffer Stuff
 
-                unsigned int VBO;
-                glGenBuffers(1,&VBO);
-                glBindBuffer(GL_ARRAY_BUFFER, VBO );
-                glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_DYNAMIC_DRAW);
-                glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,5*sizeof(float),0);
-                glEnableVertexAttribArray(0);
-                glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,5*sizeof(float),(const void*)(2*sizeof(float)));
-                glEnableVertexAttribArray(1);
+                //unsigned int VBO;
+                //glGenBuffers(1,&VBO);
+                //glBindBuffer(GL_ARRAY_BUFFER, VBO );
+                //glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_DYNAMIC_DRAW);
+                //glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,5*sizeof(float),0);
+                //glEnableVertexAttribArray(0);
+                //glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,5*sizeof(float),(const void*)(2*sizeof(float)));
+                //glEnableVertexAttribArray(1);
 
                 {
                     unsigned int err = glGetError();
@@ -134,9 +140,9 @@ int main(int argc, char *argv[]) {
                             break;
                         }
                     }
-                    int windowWidth,windowHeight;
-                    SDL_GetWindowSize(window,&windowWidth,&windowHeight);
-                    glViewport(0,0,windowWidth,windowHeight);
+                    int windowWidth, windowHeight;
+                    SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+                    glViewport(0, 0, windowWidth, windowHeight);
                     {
                         unsigned int err = glGetError();
                         if (err)
@@ -148,7 +154,7 @@ int main(int argc, char *argv[]) {
                         0,1,2,3,4,5
                     };
                     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &ibo);
-                    //glDrawArrays(GL_TRIANGLES,0,6);
+                    glDrawArrays(GL_TRIANGLES,0,3);
                     SDL_GL_SwapWindow( window );
                 }
             }
@@ -158,4 +164,13 @@ int main(int argc, char *argv[]) {
     }
     std::cin.get();
     return EXIT_SUCCESS;
+}
+
+
+int a(int a) {
+    if (a < 5) {
+        return 0;
+    } else {
+        return a;
+    }
 }
