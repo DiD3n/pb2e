@@ -39,3 +39,5 @@ template<typename T, typename ... T2>
 inline void _raw(const T& arg, const T2& ... args) {
     _print(arg, args...);
 }   
+
+void showLogo(void);
