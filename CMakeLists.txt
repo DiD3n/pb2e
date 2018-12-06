@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(pb2e VERSION 0.1.0)
+
+project(pb2e)
 
 file(GLOB_RECURSE cppf "src/*.cpp")
 add_executable(pb2e ${cppf})
+
+set(CMAKE_BUILD_TYPE Debug)
 
 #Build counter
 file(STRINGS "BuildCounter.txt" BUILD_NUMBER)
@@ -19,4 +22,4 @@ target_link_libraries(pb2e -lSDL2_image)
 target_link_libraries(pb2e -lSDL2_ttf)
 target_link_libraries(pb2e -lglew32s -lOpenGL32 -lGLU32 -static-libgcc -static-libstdc++)
 
-target_link_libraries(pb2e)
+target_link_libraries(pb2e -g)

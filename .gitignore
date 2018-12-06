@@ -1,3 +1,6 @@
 build/
 .vscode/
+./BuildCounter.txt
 BuildCounter.txt
+src/include/sdl2.hpp.gch
+src/include/glew.hpp.gch

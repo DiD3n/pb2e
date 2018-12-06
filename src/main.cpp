@@ -7,27 +7,7 @@
 
 #include "gl/VertexBufferLayout.hpp"
 #include "gl/VertexBuffer.hpp"
-
-unsigned int compileShader(int type, const std::string& source) {
-    unsigned int shader = glCreateShader(type);//GL_FRAGMENT_SHADER
-    std::string shaderSource = source;
-    const char * shaderCSource = shaderSource.c_str();
-    glShaderSource(shader,1, &shaderCSource,NULL);
- 
-    glCompileShader(shader);
-    
-    int compileStatus;
-    glGetShaderiv(shader,GL_COMPILE_STATUS,&compileStatus);
-    if (compileStatus != GL_TRUE) {
-        int length = 0;
-        char message[1024];
-        glGetShaderInfoLog(shader,1024,&length,message);
-        glDeleteShader(shader);
-        logError("compileShader -","[openGL Error]:\n",message,"\n");
-        return 0;
-    }
-    return shader;
-}
+#include "gl/Shader.hpp"
 
 int main(int argc, char *argv[]) {
     showLogo();
@@ -61,56 +41,47 @@ int main(int argc, char *argv[]) {
                 
                 buffer.bind();
 
-                unsigned int program = glCreateProgram();
-
-                std::string vertexShaderSource = "";
-                {
-                    std::ifstream file = std::ifstream ("res/basicVertex.shader",std::ifstream::binary);
-                    if (file.good()) {
-                        std::string buffer;
-                        while (std::getline(file,buffer)) {
-                            vertexShaderSource += buffer;
-                        }
-                    }
-                }
-                
-                std::string fragmentShaderSource = "";
-                {
-                    std::ifstream file = std::ifstream ("res/basicFragment.shader",std::ifstream::binary);
-                     if (file.good()) {
-                        std::string buffer;
-                        while (std::getline(file,buffer)) {
-                            fragmentShaderSource += buffer;
-                        }
-                    }
-                }
-                glAttachShader(program,compileShader(GL_VERTEX_SHADER,vertexShaderSource));
-                glAttachShader(program,compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource));
-                glLinkProgram(program);
-                glUseProgram(program);
                 
                 while(unsigned int err = glGetError()) {
                     std::cout << err << "\n";
                 }
-
+                gl::Shader shader("res/basicVertex.shader","res/basicFragment.shader");
+                {
+                    gl::Uniform uniform(false, 1);
+                }
                 bool end = false;
                 while (!end) {
 
                     SDL_Event ev;
                     while (SDL_PollEvent(&ev)) {
                         switch (ev.type) {
-                        case SDL_QUIT:
-                            end = true;
+                            case SDL_QUIT: //exit
+                                end = true;
                             break;
-                        case SDL_WINDOWEVENT:
-                            switch (ev.window.event) {
-                            case SDL_WINDOWEVENT_SIZE_CHANGED:
-                                glViewport(0, 0, ev.window.data1, ev.window.data2);
-                                break;
-                            }
+
+                            case SDL_WINDOWEVENT: //resize
+                                switch (ev.window.event) {
+                                case SDL_WINDOWEVENT_SIZE_CHANGED:
+                                    glViewport(0, 0, ev.window.data1, ev.window.data2);
+                                    break;
+                                }
                             break;
+
+                            case SDL_KEYUP: //recompile
+                                if (ev.key.keysym.sym == SDLK_r)
+                                    shader.recompile();
                         }
                     }
+                    
+                    int a = 38;
+//
+                    gl::Uniform uniform1(true, a);
+                    gl::Uniform uniform12(true, a);
+                    gl::Uniform uniform13(true, a);
+                    gl::Uniform uniform14(true, a);
+                    gl::Uniform uniform2(false, 1.0f);
+                    gl::Uniform uniform3(false, 1.0f,2.0f,3.0f,5.0f,5.0f,6.0f,7.0f,8.0f,98.0f,9.0f);
+
                     glClear(GL_COLOR_BUFFER_BIT);
                     
                     unsigned int ibo[] = { 0,1,2,3,1,2 };

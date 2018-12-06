@@ -18,25 +18,14 @@ namespace gl {
         unsigned int getTypeSize() const { //v1.1
 
             switch (type) {
-                case GL_FLOAT:
-                    return sizeof(GLfloat);
-                break;
-                case GL_DOUBLE:
-                    return sizeof(GLdouble);
-                break;
-                case GL_BYTE:
-                    return sizeof(GLbyte);
-                break;
-                case GL_INT:
-                    return sizeof(GLint);
-                break;
-                case GL_UNSIGNED_BYTE:
-                    return sizeof(GLuint);
-                break;
-                case GL_UNSIGNED_INT:
-                    return sizeof(GLubyte);
-                break;
-            }     
+                case GL_FLOAT:         return sizeof(GLfloat);
+                case GL_DOUBLE:        return sizeof(GLdouble);
+                case GL_BYTE:          return sizeof(GLbyte);
+                case GL_INT:           return sizeof(GLint);
+                case GL_UNSIGNED_BYTE: return sizeof(GLuint);
+                case GL_UNSIGNED_INT:  return sizeof(GLubyte);
+                default:               return 0;
+            }    
         }
         LayoutElement(const LayoutElement& other)
          : count(other.count), type(other.type), normalized(other.normalized) {}

@@ -6,22 +6,22 @@
 #include "../include/glew.hpp"
 
 template<typename T> 
-static unsigned int sizeOfMulti(const T& arg) { return sizeof(arg);}
+unsigned int sizeOfMulti(const T& arg) { return sizeof(arg);}
 
 template<typename T, typename ... T2> 
-static unsigned int sizeOfMulti(const T& arg,const T2&... args) { return sizeOfMulti(args...) + sizeof(arg); }
+unsigned int sizeOfMulti(const T& arg,const T2&... args) { return sizeOfMulti(args...) + sizeof(arg); }
 
 
 
 template<typename T> 
-static void pushData(void* data, unsigned int byte, const T& arg) {
-    memcpy((data)+byte,&arg,sizeof(arg));
+void pushData(void* data, const T& arg) {
+    memcpy(data, &arg, sizeof(arg));
 }
 
 template<typename T, typename ... T2> 
-static void pushData(void* data, unsigned int byte, const T& arg,const T2&... args) {
-    memcpy((data)+byte,&arg,sizeof(arg));
-    pushData(data,byte + sizeof(arg), args...);
+void pushData(void* data, const T& arg,const T2&... args) {
+    memcpy(data, &arg, sizeof(arg));
+    pushData((char*)data + sizeof(arg), args...);
 }
 
 namespace gl {
@@ -42,7 +42,7 @@ namespace gl {
         void push(const T& arg,const T2&... args) {
             if (vbl->stride == sizeOfMulti(arg,args...)) {
                 data = (void*)realloc((void*)data, dataSize + vbl->stride);
-                pushData(data,dataSize,arg,args...);
+                pushData((char*)data + dataSize, arg, args...);
                 dataSize += vbl->stride;
             } else {
                 logError("gl::VertexBuffer::push()","- data size(",sizeOfMulti(arg,args...),") isn't equal stride(",vbl->stride,")... skipping");
