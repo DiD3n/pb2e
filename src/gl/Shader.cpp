@@ -56,7 +56,7 @@ namespace gl {
         std::ifstream fragFile(fragmentSourcePath, std::ifstream::binary);
         if (fragFile.good())
             while (std::getline(fragFile,tmp)) {
-                fragmentSource += tmp;
+                fragmentSource += tmp + "\n";
             }
         else
             logError("gl::Shader::compile() - Problem with source file:\"",fragmentSourcePath,"\"");
@@ -64,7 +64,7 @@ namespace gl {
         std::ifstream verFile(vertexSourcePath, std::ifstream::binary);
         if (verFile.good())
             while (std::getline(verFile,tmp)) {
-                vertexSource += tmp;
+                vertexSource += tmp + "\n";
             }
         else
             logError("gl::Shader::compile() - Problem with source file:\"",vertexSourcePath,"\"");
