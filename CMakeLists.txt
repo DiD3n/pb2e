@@ -14,6 +14,8 @@ file(WRITE "BuildCounter.txt" ${BUILD_NUMBER_CALCULATED})
 
 add_definitions(-DBuild_Counter=${BUILD_NUMBER_CALCULATED})
 
+if (${WIN32})
+		
 target_link_libraries(pb2e -lmingw32)
 target_link_libraries(pb2e -lSDL2main)
 target_link_libraries(pb2e -lSDL2)
@@ -21,5 +23,16 @@ target_link_libraries(pb2e -lSDL2_image)
 #target_link_libraries(pb2e -lSDL2_mixer)
 target_link_libraries(pb2e -lSDL2_ttf)
 target_link_libraries(pb2e -lglew32s -lOpenGL32 -lGLU32 -static-libgcc -static-libstdc++)
+
+elseif(${UNIX})
+
+target_link_libraries(pb2e -lSDL2)
+target_link_libraries(pb2e -lSDL2_image)
+#target_link_libraries(pb2e -lSDL2_mixer)
+target_link_libraries(pb2e -lSDL2_ttf)
+target_link_libraries(pb2e -lGL -lGLEW)
+
+endif()
+
 
 target_link_libraries(pb2e -g)
