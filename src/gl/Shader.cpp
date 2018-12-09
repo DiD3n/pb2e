@@ -33,6 +33,7 @@ static bool compileShader(int type, unsigned int& shader,const std::string& sour
     return shader;
 }
 
+
 namespace gl {
 
     Shader::Shader(const Shader& other) {
@@ -163,7 +164,7 @@ namespace gl {
 
     /* misc */
 
-    bool Shader::pushUniform(const std::string& name, int type, Uniform& uniform) {  
+    bool Shader::pushUniform(const std::string& name, Uniform& uniform) {  
 
         int id = glGetUniformLocation(this->programID,name.c_str());
 
