@@ -2,6 +2,8 @@
 #include <string>
 #include <fstream>
 
+#define _DEBUG
+
 #include "logger.hpp"
 #include "include/glew.hpp"
 
@@ -9,11 +11,12 @@
 #include "gl/VertexBuffer.hpp"
 #include "gl/Shader.hpp"
 
+
 int main(int argc, char *argv[]) {
     showLogo();
 
     SDL_Window* window = NULL;
-    window = SDL_CreateWindow("openGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("openGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
     if (!window) {
         logError("SDL_CreateWindow");
     } else {
@@ -31,24 +34,28 @@ int main(int argc, char *argv[]) {
 				}
 
                 gl::VertexBufferLayout layout;
-                layout << gl::LayoutElement(2) << gl::LayoutElement(3);//,GL_UNSIGNED_BYTE,true);
+                layout << gl::LayoutElement(2) << gl::LayoutElement(3);
 
                 gl::VertexBuffer buffer(layout, true);
                 buffer.push(-0.9f,  0.9f , 0.9f,0.0f,0.0f);
                 buffer.push( 0.9f,  0.9f , 0.0f,0.9f,0.0f);
                 buffer.push(-0.9f, -0.9f , 0.0f,0.0f,0.9f);
-                buffer.push( 0.9f, -0.9f , 0.9f,0.9f,0.6f);           
+                buffer.push( 0.9f, -0.9f , 0.0f,0.9f,0.9f);           
                 
                 buffer.bind();
-
                 
+
+
+                gl::Shader shader("res/basicVertex.glsl","res/basicFragment.glsl");
+                float uniformIncrement = true;
+                float uniformVal = 0.0f;
+                gl::Uniform uniform(false, uniformVal, uniformVal, uniformVal, uniformVal);
+                shader.pushUniform("mod",uniform);
+
                 while(unsigned int err = glGetError()) {
                     std::cout << err << "\n";
                 }
-                gl::Shader shader("res/basicVertex.shader","res/basicFragment.shader");
-                {
-                    gl::Uniform uniform(false, 1);
-                }
+
                 bool end = false;
                 while (!end) {
 
@@ -72,15 +79,13 @@ int main(int argc, char *argv[]) {
                                     shader.recompile();
                         }
                     }
-                    
-                    int a = 38;
-//
-                    gl::Uniform uniform1(true, a);
-                    gl::Uniform uniform12(true, a);
-                    gl::Uniform uniform13(true, a);
-                    gl::Uniform uniform14(true, a);
-                    gl::Uniform uniform2(false, 1.0f);
-                    gl::Uniform uniform3(false, 1.0f,2.0f,3.0f,5.0f,5.0f,6.0f,7.0f,8.0f,98.0f,9.0f);
+                    if (uniformVal > 1.0f || uniformVal < -1.0f)
+                        uniformIncrement = !uniformIncrement;
+                    if (uniformIncrement)
+                        uniformVal += 0.01f;
+                    else
+                        uniformVal -= 0.01f;
+                    shader.update();
 
                     glClear(GL_COLOR_BUFFER_BIT);
                     

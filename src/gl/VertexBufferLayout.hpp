@@ -22,8 +22,8 @@ namespace gl {
                 case GL_DOUBLE:        return sizeof(GLdouble);
                 case GL_BYTE:          return sizeof(GLbyte);
                 case GL_INT:           return sizeof(GLint);
-                case GL_UNSIGNED_BYTE: return sizeof(GLuint);
-                case GL_UNSIGNED_INT:  return sizeof(GLubyte);
+                case GL_UNSIGNED_BYTE: return sizeof(GLubyte);
+                case GL_UNSIGNED_INT:  return sizeof(GLuint);
                 default:               return 0;
             }    
         }
