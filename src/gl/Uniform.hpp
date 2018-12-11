@@ -2,6 +2,17 @@
 
 #include <string>
 
+template<typename T>
+static void pushDataArray(T* data, const T& arg) {
+    data[0] = arg; 
+}
+
+template<typename T, typename ... T2>
+static void pushDataArray(T* data, const T& arg, const T2&... args) {
+    data[0] = arg;
+    pushDataArray(data + 1, args...);
+}
+
 namespace gl {
 
     enum UniformType : int { //TODO: double
