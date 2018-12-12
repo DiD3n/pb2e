@@ -24,8 +24,8 @@ namespace gl {
 
         constexpr bool isLegit() const {return legit;}
 
-        inline void bind()   const {if (legit) glBindTexture(GL_TEXTURE_2D,id);};
-        inline void unBind() const {if (legit) glBindTexture(GL_TEXTURE_2D, 0);};
+        inline void bind()   const;
+        inline void unBind() const;
 
     };
     
