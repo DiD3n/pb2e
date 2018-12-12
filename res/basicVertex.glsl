@@ -1,11 +1,11 @@
 #version 330 core
 
 layout(location = 0) in vec4 position;
-layout(location = 1) in vec4 color;
+layout(location = 1) in vec2 textureCord;
 
-out vec4 v_color;
+out vec2 v_cord;
 
 void main() {
    gl_Position = position;
-   v_color = color;
+   v_cord = textureCord;
 }

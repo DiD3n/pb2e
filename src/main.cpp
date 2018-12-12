@@ -10,6 +10,7 @@
 #include "gl/VertexBufferLayout.hpp"
 #include "gl/VertexBuffer.hpp"
 #include "gl/Shader.hpp"
+#include "gl/Texture.hpp"
 
 
 int main(int argc, char *argv[]) {
@@ -34,23 +35,19 @@ int main(int argc, char *argv[]) {
 				}
 
                 gl::VertexBufferLayout layout;
-                layout << gl::LayoutElement(2) << gl::LayoutElement(3);
+                layout << gl::LayoutElement(2) << gl::LayoutElement(2);
 
                 gl::VertexBuffer buffer(layout, true);
-                buffer.push(-0.9f,  0.9f , 0.9f,0.0f,0.0f);
-                buffer.push( 0.9f,  0.9f , 0.0f,0.9f,0.0f);
-                buffer.push(-0.9f, -0.9f , 0.0f,0.0f,0.9f);
-                buffer.push( 0.9f, -0.9f , 0.0f,0.9f,0.9f);           
+                buffer.push(-0.9f,  0.9f , 0.0f,1.0f);
+                buffer.push( 0.9f,  0.9f , 1.0f,1.0f);
+                buffer.push(-0.9f, -0.9f , 0.0f,0.0f);
+                buffer.push( 0.9f, -0.9f , 1.0f,0.0f);           
                 
                 buffer.bind();
-                
-
 
                 gl::Shader shader("res/basicVertex.glsl","res/basicFragment.glsl");
-                float uniformIncrement = true;
-                float uniformVal = 0.0f;
-                gl::Uniform uniform(false, uniformVal, uniformVal, uniformVal, uniformVal);
-                shader.pushUniform("mod",uniform);
+
+                gl::Texture texture("res/weed.png");
 
                 while(unsigned int err = glGetError()) {
                     std::cout << err << "\n";
@@ -79,14 +76,6 @@ int main(int argc, char *argv[]) {
                                     shader.recompile();
                         }
                     }
-                    if (uniformVal > 1.0f || uniformVal < -1.0f)
-                        uniformIncrement = !uniformIncrement;
-                    if (uniformIncrement)
-                        uniformVal += 0.01f;
-                    else
-                        uniformVal -= 0.01f;
-                    shader.update();
-
                     glClear(GL_COLOR_BUFFER_BIT);
                     
                     unsigned int ibo[] = { 0,1,2,3,1,2 };
