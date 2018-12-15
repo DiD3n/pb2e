@@ -4,3 +4,4 @@ build/
 BuildCounter.txt
 src/include/sdl2.hpp.gch
 src/include/glew.hpp.gch
+src/include/glm.hpp.gch
