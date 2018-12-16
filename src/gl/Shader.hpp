@@ -13,7 +13,7 @@ namespace gl {
 
     struct UniformData {
         const std::string name;
-        const int id;
+        int id;
         std::reference_wrapper<const Uniform> uniform;
         UniformData& operator <<(const Uniform& uniform) {
             this->uniform.operator=(std::ref(uniform));

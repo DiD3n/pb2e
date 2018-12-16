@@ -95,8 +95,17 @@ namespace gl {
             //replacing program
             glDeleteProgram(programID);
             programID = program;
+            
+            for (UniformData& i : uniformList) {
+                int id = glGetUniformLocation(this->programID,i.name.c_str());
+                if (id > -1)
+                    i.id = id;
+                else
+                   logError("gl::Shader::recompile() - can not find \"",i.name,"\" Uniform in the shader... did you change something?"); 
+            }
             this->bind();
             logError("gl::Shader::recompile() - done!");
+
         } else {
             glDeleteProgram(program); //in case of a failed compilation
             logError("gl::Shader::recompile() - failed!");
@@ -174,6 +183,7 @@ namespace gl {
             i << uniform;
             return;
         }
+        logError("gl::Shader::pushUniform() - can not find \"",name,"\" Uniform in the shader... skipping!");
     }
 
     /* misc */
