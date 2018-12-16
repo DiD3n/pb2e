@@ -22,8 +22,9 @@ _raw(args, " at", __FILE__, "\b:",__LINE__)
 
 #define _OUT_LOG std::cout
 
-static inline void _print() {
-    _OUT_LOG << '\n';
+template<typename T>
+static inline void _print(const T& arg) {
+    _OUT_LOG << arg << '\n';
 }
 
 template<typename T, typename ... T2>
