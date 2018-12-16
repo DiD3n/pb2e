@@ -6,6 +6,7 @@
 
 #include "logger.hpp"
 #include "include/glew.hpp"
+#include "include/glm.hpp"
 
 #include "gl/VertexBufferLayout.hpp"
 #include "gl/VertexBuffer.hpp"
@@ -38,21 +39,27 @@ int main(int argc, char *argv[]) {
                 layout << gl::LayoutElement(2) << gl::LayoutElement(2);
 
                 gl::VertexBuffer buffer(layout, true);
-                buffer.push(-0.9f,  0.9f , 0.0f,1.0f);
-                buffer.push( 0.9f,  0.9f , 1.0f,1.0f);
-                buffer.push(-0.9f, -0.9f , 0.0f,0.0f);
-                buffer.push( 0.9f, -0.9f , 1.0f,0.0f);           
+                buffer.push(-255.9f,  255.9f , 0.0f,1.0f);
+                buffer.push( 255.9f,  255.9f , 1.0f,1.0f);
+                buffer.push(-255.9f, -255.9f , 0.0f,0.0f);
+                buffer.push( 255.9f, -255.9f , 1.0f,0.0f);           
                 
                 buffer.bind();
 
                 gl::Shader shader("res/basicVertex.glsl","res/basicFragment.glsl");
 
+                glm::mat4 mvp = glm::ortho(-400.0f,400.0f,-300.0f,300.0f,-1.0f,1.0f);
+                gl::Uniform un(true,mvp);
+                shader.pushUniform("MVP",un);
+
                 gl::Texture texture("res/weed.png");
+
+                shader.update();
 
                 while(unsigned int err = glGetError()) {
                     std::cout << err << "\n";
                 }
-
+                unsigned int frame = 0;
                 bool end = false;
                 while (!end) {
 
@@ -67,6 +74,8 @@ int main(int argc, char *argv[]) {
                                 switch (ev.window.event) {
                                 case SDL_WINDOWEVENT_SIZE_CHANGED:
                                     glViewport(0, 0, ev.window.data1, ev.window.data2);
+                                    mvp = glm::ortho(-(float)ev.window.data1/2,(float)ev.window.data1/2,-(float)ev.window.data2/2,(float)ev.window.data2/2,-1.0f,1.0f);
+                                    shader.update("MVP");
                                     break;
                                 }
                             break;
@@ -83,7 +92,7 @@ int main(int argc, char *argv[]) {
                     
                     //glDrawArrays(GL_TRIANGLES,0, buffer.getDataCount());
                     SDL_GL_SwapWindow( window );
-
+                    frame++;
                     while (unsigned int err = glGetError())
                         std::cout << err << '\n';
                 }

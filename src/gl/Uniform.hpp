@@ -26,8 +26,6 @@ namespace gl {
     };
 
         
-    //UniformType getUniformType(const std::type_info& type, int count) {
-    //}
 
     struct Uniform {
         void* data;

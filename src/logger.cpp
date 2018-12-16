@@ -5,7 +5,7 @@
 void showLogo(void) {
 	//why not?
     using namespace std::string_literals;
-	logInfo(R"(
+	_raw(R"(
                88           ad888888b,           
                88          d8"     "88            
                88                  a8P            
