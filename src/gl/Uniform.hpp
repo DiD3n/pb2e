@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "../include/glm.hpp"
 
 template<typename T>
 static void pushDataArray(T* data, const T& arg) {
@@ -21,11 +22,7 @@ namespace gl {
         vec3f   = 30,  vec3ui  = 31,  vec3i   = 32,
         vec4f   = 40,  vec34ui = 41,  vec34   = 42,
 
-        matx2   = 50,  matx3   = 51,  matx4   = 52,
-
-        mat2x3  = 53,  mat3x2  = 54,
-        mat2x4  = 55,  mat4x2  = 56,
-        mat3x4  = 57,  mat4x3  = 58
+        mat2    = 50,  mat3    = 51,  mat4    = 52,
     };
 
         
@@ -68,18 +65,18 @@ namespace gl {
                  if (typeid(T) == typeid(float))        this->type = vec1f; 
             else if (typeid(T) == typeid(int))          this->type = vec1i; 
             else if (typeid(T) == typeid(unsigned int)) this->type = vec1ui;
-                // todo: matrix support
+            else if (typeid(T) == typeid(glm::mat2))    this->type = mat2;
+            else if (typeid(T) == typeid(glm::mat3))    this->type = mat3;
+            else if (typeid(T) == typeid(glm::mat4))    this->type = mat4;
             if (pointable) {
                 this->pointable = true;
                 data = &arg;
             }
             else {
                 data = malloc(sizeof(T));
-                //new T data
+
                 pushDataArray((T*)data,arg);
             } 
-                
-
         }
 
         ~Uniform() {

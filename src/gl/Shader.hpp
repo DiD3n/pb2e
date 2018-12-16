@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <typeinfo>
+#include <functional>
 
 #include "../include/glew.hpp"
 #include "VertexBuffer.hpp"
@@ -13,7 +14,13 @@ namespace gl {
     struct UniformData {
         const std::string name;
         const int id;
-        Uniform uniform;
+        std::reference_wrapper<const Uniform> uniform;
+        UniformData& operator <<(const Uniform& uniform) {
+            this->uniform.operator=(std::ref(uniform));
+            return *this;
+        }
+        UniformData(const std::string& name, const int& id, const Uniform& uniform)
+         : uniform(std::ref(uniform)), name(name), id(id) {}
     };
 
     class Shader {
@@ -44,8 +51,8 @@ namespace gl {
         void update(); /* all */
         void update(const std::string& name); /* specific one */
         
-        void update(const std::string& name, Uniform& data); /* push Data */
+        void update(const std::string& name, const Uniform&);
 
-        bool pushUniform(const std::string& name, Uniform& data);
+        bool pushUniform(const std::string& name, const Uniform&);
     };
 };
