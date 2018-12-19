@@ -8,26 +8,26 @@ static bool compileShader(int type, unsigned int& shader,const std::string& sour
         return false;
     }
     
-    shader = glCreateShader(type);
+    GLCall(shader = glCreateShader(type));
 
     const char* tmp = source.c_str();
-    glShaderSource(shader,1, &tmp, NULL);
+    GLCall(glShaderSource(shader,1, &tmp, NULL));
  
-    glCompileShader(shader);
+    GLCall(glCompileShader(shader));
     
     int compileStatus;
-    glGetShaderiv(shader,GL_COMPILE_STATUS,&compileStatus);
+    GLCall(glGetShaderiv(shader,GL_COMPILE_STATUS,&compileStatus));
 
     if (compileStatus != GL_TRUE) {
         
         int length = 0;
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
+        GLCall(glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length));
 
         char msg[length];
-        glGetShaderInfoLog(shader, length, &length, msg);
+        GLCall(glGetShaderInfoLog(shader, length, &length, msg));
 
         logError("gl::compileShader(",type,",",source,") - compile error: \n", (const char*)msg,'\n');
-        glDeleteShader(shader);
+        GLCall(glDeleteShader(shader));
         return 0;
     }
     return shader;
@@ -42,7 +42,7 @@ namespace gl {
 
     Shader::Shader(const std::string& vertexSourcePath, const std::string& fragmentSourcePath) 
     : vertexSourcePath(vertexSourcePath) , fragmentSourcePath(fragmentSourcePath) {
-        programID = glCreateProgram(); 
+        GLCall(programID = glCreateProgram()); 
         if (this->compile(programID)) {
             legit = true;
         }  
@@ -60,7 +60,6 @@ namespace gl {
                 fragmentSource += tmp + "\n";
             }
         }
-            
         else
             logError("gl::Shader::compile() - Problem with source file:\"",fragmentSourcePath,"\"");
 
@@ -76,28 +75,28 @@ namespace gl {
         unsigned int fragmentShader, vertexShader;
         if (compileShader(GL_FRAGMENT_SHADER, fragmentShader, fragmentSource) && compileShader(GL_VERTEX_SHADER, vertexShader, vertexSource)) {
 
-            glAttachShader(program,fragmentShader);
-            glAttachShader(program,vertexShader);
-            glLinkProgram(program);
+            GLCall(glAttachShader(program,fragmentShader));
+            GLCall(glAttachShader(program,vertexShader));
+            GLCall(glLinkProgram(program));
 
             good = true;   
         }
 
-        glDeleteShader(fragmentShader);
-        glDeleteShader(vertexShader);
+        GLCall(glDeleteShader(fragmentShader));
+        GLCall(glDeleteShader(vertexShader));
 
         return good;
     }
 
     void Shader::recompile() {
-        unsigned int program = glCreateProgram();
+        GLCall(unsigned int program = glCreateProgram());
         if (compile(program)) {
             //replacing program
-            glDeleteProgram(programID);
+            GLCall(glDeleteProgram(programID));
             programID = program;
             
             for (UniformData& i : uniformList) {
-                int id = glGetUniformLocation(this->programID,i.name.c_str());
+                GLCall(int id = glGetUniformLocation(this->programID,i.name.c_str()));
                 if (id > -1)
                     i.id = id;
                 else
@@ -107,7 +106,7 @@ namespace gl {
             logError("gl::Shader::recompile() - done!");
 
         } else {
-            glDeleteProgram(program); //in case of a failed compilation
+            GLCall(glDeleteProgram(program)); //in case of a failed compilation
             logError("gl::Shader::recompile() - failed!");
         }
             
@@ -119,34 +118,34 @@ namespace gl {
             /*   vec1   */
 
             case vec1f:   
-            glUniform1f(data.id,*(float*)data.uniform.get().data);            break;
+            GLCall(glUniform1f(data.id,*(float*)data.uniform.get().data));            break;
             case vec1ui:  
-            glUniform1ui(data.id,*(unsigned int*)data.uniform.get().data);    break;
+            GLCall(glUniform1ui(data.id,*(unsigned int*)data.uniform.get().data));    break;
             case vec1i:   
-            glUniform1i(data.id,*(int*)data.uniform.get().data);              break;
+            GLCall(glUniform1i(data.id,*(int*)data.uniform.get().data));              break;
             /*   vec2   */
 
             case vec2f:   
-            glUniform2f(data.id,((float*)data.uniform.get().data)[0],((float*)data.uniform.get().data)[1]);                   break;
+            GLCall(glUniform2f(data.id,((float*)data.uniform.get().data)[0],((float*)data.uniform.get().data)[1]));                   break;
             case vec2ui:  
-            glUniform2ui(data.id,((unsigned int*)data.uniform.get().data)[0],((unsigned int*)data.uniform.get().data)[1]);    break;
+            GLCall(glUniform2ui(data.id,((unsigned int*)data.uniform.get().data)[0],((unsigned int*)data.uniform.get().data)[1]));    break;
             case vec2i:   
-            glUniform2i(data.id,((int*)data.uniform.get().data)[0],((int*)data.uniform.get().data)[1]);                       break;
+            GLCall(glUniform2i(data.id,((int*)data.uniform.get().data)[0],((int*)data.uniform.get().data)[1]));                       break;
             /*   vec3   */
 
             case vec3f:
-            glUniform3f(data.id,((float*)data.uniform.get().data)[0],((float*)data.uniform.get().data)[1],((float*)data.uniform.get().data)[2]);                          break;
+            GLCall(glUniform3f(data.id,((float*)data.uniform.get().data)[0],((float*)data.uniform.get().data)[1],((float*)data.uniform.get().data)[2]));                          break;
             case vec3ui:
-            glUniform3ui(data.id,((unsigned int*)data.uniform.get().data)[0],((unsigned int*)data.uniform.get().data)[1],((unsigned int*)data.uniform.get().data)[2]);    break;
+            GLCall(glUniform3ui(data.id,((unsigned int*)data.uniform.get().data)[0],((unsigned int*)data.uniform.get().data)[1],((unsigned int*)data.uniform.get().data)[2]));    break;
             case vec3i:
-            glUniform3i(data.id,((int*)data.uniform.get().data)[0],((int*)data.uniform.get().data)[1],((int*)data.uniform.get().data)[2]);                                break;
+            GLCall(glUniform3i(data.id,((int*)data.uniform.get().data)[0],((int*)data.uniform.get().data)[1],((int*)data.uniform.get().data)[2]));                                break;
 
             case mat2:
-            glUniformMatrix2fv(data.id,1,GL_FALSE,(float*)&((glm::mat2*)data.uniform.get().data)[0][0]);   break;
+            GLCall(glUniformMatrix2fv(data.id,1,GL_FALSE,(float*)&((glm::mat2*)data.uniform.get().data)[0][0]));   break;
             case mat3:
-            glUniformMatrix3fv(data.id,1,GL_FALSE,(float*)&((glm::mat3*)data.uniform.get().data)[0][0]);   break;
+            GLCall(glUniformMatrix3fv(data.id,1,GL_FALSE,(float*)&((glm::mat3*)data.uniform.get().data)[0][0]));   break;
             case mat4:
-            glUniformMatrix4fv(data.id,1,GL_FALSE,(float*)&((glm::mat4*)data.uniform.get().data)[0][0]);   break;
+            GLCall(glUniformMatrix4fv(data.id,1,GL_FALSE,(float*)&((glm::mat4*)data.uniform.get().data)[0][0]));   break;
             default:
             logError("gl::Shader::updateShaderUniform(uniformType:",data.uniform.get().type,") - Unknown type... skipping!");
         }
@@ -190,7 +189,7 @@ namespace gl {
 
     bool Shader::pushUniform(const std::string& name, const Uniform& uniform) {  
 
-        int id = glGetUniformLocation(this->programID,name.c_str());
+        GLCall(int id = glGetUniformLocation(this->programID,name.c_str()));
 
         if (id != -1) {
             //testing whether there is any duplication
