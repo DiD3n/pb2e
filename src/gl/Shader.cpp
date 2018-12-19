@@ -50,7 +50,7 @@ namespace gl {
     }
 
 
-    bool Shader::compile(const unsigned int& program) {
+    bool Shader::compile(const unsigned int& program) const {
         bool good = false;
         std::string fragmentSource, vertexSource, tmp;
 
@@ -112,7 +112,7 @@ namespace gl {
             
     }
 
-    void Shader::updateShaderUniform(const UniformData& data) {
+    void Shader::updateShaderUniform(const UniformData& data) const {
         this->bind();
         switch (data.uniform.get().type) {
             /*   vec1   */
@@ -153,8 +153,8 @@ namespace gl {
     
     /* update */
 
-    void Shader::update() {
-        for (UniformData& i : uniformList) {
+    void Shader::update() const {
+        for (const UniformData& i : uniformList) {
             if (!i.uniform.get().pointable)
                 continue;
             else
@@ -162,8 +162,8 @@ namespace gl {
         }
     }
 
-    void Shader::update(const std::string& name) {
-        for (UniformData& i : uniformList) {
+    void Shader::update(const std::string& name) const{
+        for (const UniformData& i : uniformList) {
             if (i.name != name)
                 continue;
             if (i.uniform.get().pointable) {

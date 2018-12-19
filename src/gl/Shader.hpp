@@ -30,9 +30,9 @@ namespace gl {
         unsigned int programID;
         std::string vertexSourcePath, fragmentSourcePath;
 
-        bool compile(const unsigned int&);
+        bool compile(const unsigned int&) const;
 
-        void updateShaderUniform(const UniformData&);
+        void updateShaderUniform(const UniformData&) const;
 
         public:
 
@@ -43,13 +43,13 @@ namespace gl {
 
         void recompile();
 
-        bool isLegit();
+        constexpr bool isLegit() const {return legit};
 
-        void bind()   {if (legit) glUseProgram(programID);}
-        void unBind() {glUseProgram(0);}
+        void bind()   const {if (legit) glUseProgram(programID);}
+        void unBind() const {glUseProgram(0);}
 
-        void update(); /* all */
-        void update(const std::string& name); /* specific one */
+        void update() const; /* all */
+        void update(const std::string& name) const; /* specific one */
         
         void update(const std::string& name, const Uniform&);
 
