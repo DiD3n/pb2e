@@ -13,12 +13,12 @@
 #include "gl/Shader.hpp"
 #include "gl/Texture.hpp"
 
-#include "misc/memory.hpp"
+#include "system/memory.hpp"
 
 typedef unsigned char uchar;
 
 int main(int argc, char *argv[]) {
-    logInfo(getMemoryUsage(), "- start");
+    logInfo(getMemoryUsage()/1024, "- start");
     int exitCode = EXIT_SUCCESS;
     SDL_Window* window = NULL;
 
@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
     }
     SDL_DestroyWindow(window);
     main_exit:
-    if (exitCode)
+    //if (exitCode)
         std::cin.get();
     return exitCode;
 }
