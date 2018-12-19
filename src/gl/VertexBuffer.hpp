@@ -49,13 +49,13 @@ namespace gl {
             }
         }
 
-        constexpr bool isLegit() {return legit;}
-        constexpr unsigned int getDataCount() {return dataSize/vbl->stride;}
+        constexpr bool isLegit() const {return legit;}
+        constexpr unsigned int getDataCount() const {return dataSize/vbl->stride;}
 
         VertexBuffer& clear();
 
-        VertexBuffer& bind();
-        VertexBuffer& unBind();
+        void bind() const;
+        void unBind() const;
     };
 
 };

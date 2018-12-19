@@ -16,17 +16,14 @@ namespace gl {
         GLCall(glGenBuffers(1, &BufferID));
         GLCall(glBindBuffer(GL_ARRAY_BUFFER, BufferID));
 
-        int size = 0;
-        for (const gl::LayoutElement& i : this->vbl->list) {
-            size += i.count * i.getTypeSize();
-        } 
+
+        /*  layout setting  */
         
-        
-        int a = 0;
+        int offset = 0;
         for (int i = 0; i < this->vbl->list.size(); i++) {
-            GLCall(glVertexAttribPointer(i , this->vbl->list[i].count , this->vbl->list[i].type , (int)this->vbl->list[i].normalized , size , (const void*)a));
+            GLCall(glVertexAttribPointer(i , this->vbl->list[i].count , this->vbl->list[i].type , (int)this->vbl->list[i].normalized , this->vbl->stride , (const void*)offset));
             GLCall(glEnableVertexAttribArray(i));
-            a += this->vbl->list[i].count * this->vbl->list[i].getTypeSize();
+            offset += this->vbl->list[i].count * this->vbl->list[i].getTypeSize();
         }
         data = nullptr;
     }
@@ -40,20 +37,19 @@ namespace gl {
 
     VertexBuffer& VertexBuffer::clear() {
         free(data);
+        data = nullptr;
         dataSize = 0;
         return *this;
     }
 
-    VertexBuffer& VertexBuffer::bind() {
+    void VertexBuffer::bind() const{
         GLCall(glBindVertexArray(VAOID));
         GLCall(glBindBuffer(GL_ARRAY_BUFFER, BufferID));
         GLCall(glBufferData(GL_ARRAY_BUFFER, dataSize, data, GL_DYNAMIC_DRAW));
-        return *this;
     }
 
-    VertexBuffer& VertexBuffer::unBind() {
+    void VertexBuffer::unBind() const{
         GLCall(glBindBuffer(GL_ARRAY_BUFFER,0));
-        return *this;
     }   
 
 
