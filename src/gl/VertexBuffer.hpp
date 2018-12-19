@@ -30,7 +30,7 @@ namespace gl {
         private:
         void* data = nullptr;
         unsigned int dataSize = 0;
-        unsigned int BufferID = 0;
+        unsigned int BufferID = 0, VAOID = 0;
         bool legit = true;
         VertexBufferLayout* vbl;
 

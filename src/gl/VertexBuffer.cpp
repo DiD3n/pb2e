@@ -10,13 +10,30 @@ namespace gl {
         } else {
             this->vbl = new VertexBufferLayout(vbl);
         }
-        glGenBuffers(1, &BufferID);
-        //this->bind();
+        GLCall(glGenVertexArrays(1, &VAOID));
+        GLCall(glBindVertexArray(VAOID));
+
+        GLCall(glGenBuffers(1, &BufferID));
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, BufferID));
+
+        int size = 0;
+        for (const gl::LayoutElement& i : this->vbl->list) {
+            size += i.count * i.getTypeSize();
+        } 
+        
+        
+        int a = 0;
+        for (int i = 0; i < this->vbl->list.size(); i++) {
+            GLCall(glVertexAttribPointer(i , this->vbl->list[i].count , this->vbl->list[i].type , (int)this->vbl->list[i].normalized , size , (const void*)a));
+            GLCall(glEnableVertexAttribArray(i));
+            a += this->vbl->list[i].count * this->vbl->list[i].getTypeSize();
+        }
         data = nullptr;
     }
 
     VertexBuffer::~VertexBuffer() {
-        glDeleteBuffers(1, &BufferID);
+        GLCall(glDeleteBuffers(1, &BufferID));
+        GLCall(glDeleteBuffers(1, &VAOID));
         this->clear();
     }
 
@@ -28,23 +45,14 @@ namespace gl {
     }
 
     VertexBuffer& VertexBuffer::bind() {
-        int size = 0;
-        for (const gl::LayoutElement& i : vbl->list) {
-            size += i.count * i.getTypeSize();
-        } 
-        glBindBuffer(GL_ARRAY_BUFFER, BufferID);
-        glBufferData(GL_ARRAY_BUFFER, dataSize, data, GL_DYNAMIC_DRAW);
-        int a = 0;
-        for (int i = 0; i < vbl->list.size(); i++) {
-            glVertexAttribPointer(i , vbl->list[i].count , vbl->list[i].type , (int)vbl->list[i].normalized , size , (const void*)a);
-            glEnableVertexAttribArray(i);
-            a += vbl->list[i].count * vbl->list[i].getTypeSize();
-        }
+        GLCall(glBindVertexArray(VAOID));
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, BufferID));
+        GLCall(glBufferData(GL_ARRAY_BUFFER, dataSize, data, GL_DYNAMIC_DRAW));
         return *this;
     }
 
     VertexBuffer& VertexBuffer::unBind() {
-        glBindBuffer(GL_ARRAY_BUFFER,0);
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER,0));
         return *this;
     }   
 
