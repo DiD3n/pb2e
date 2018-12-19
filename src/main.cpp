@@ -13,11 +13,29 @@
 #include "gl/Shader.hpp"
 #include "gl/Texture.hpp"
 
+#include "misc/memory.hpp"
+
+typedef unsigned char uchar;
 
 int main(int argc, char *argv[]) {
-    showLogo();
-
+    logInfo(getMemoryUsage(), "- start");
+    int exitCode = EXIT_SUCCESS;
     SDL_Window* window = NULL;
+
+    showLogo();
+    if (SDL_Init(SDL_INIT_EVENTS) != 0) {
+        logError("SDL_Init");
+        exitCode = EXIT_FAILURE;
+        goto main_exit;
+    } else {
+        int flags = IMG_INIT_PNG;
+        if (!( IMG_Init( flags ) & flags )) {
+            logError("IMG_Init");
+            exitCode = EXIT_FAILURE;
+            goto main_exit;
+        }
+    }
+    logInfo(getMemoryUsage());
     window = SDL_CreateWindow("openGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
     if (!window) {
         logError("SDL_CreateWindow");
@@ -36,14 +54,24 @@ int main(int argc, char *argv[]) {
 				}
 
                 gl::VertexBufferLayout layout;
-                layout << gl::LayoutElement(2) << gl::LayoutElement(2);
+                layout << gl::LayoutElement(2) << gl::LayoutElement(2) << gl::LayoutElement(3,GL_UNSIGNED_BYTE,true);
 
                 gl::VertexBuffer buffer(layout, true);
-                buffer.push(-255.9f,  255.9f , 0.0f,1.0f);
-                buffer.push( 255.9f,  255.9f , 1.0f,1.0f);
-                buffer.push(-255.9f, -255.9f , 0.0f,0.0f);
-                buffer.push( 255.9f, -255.9f , 1.0f,0.0f);           
+                buffer.push(-255.9f,  255.9f , 0.0f,1.0f, (uchar)255,(uchar)0,(uchar)255);
+                buffer.push( 255.9f,  255.9f , 1.0f,1.0f, (uchar)0,(uchar)255,(uchar)255);
+                buffer.push(-255.9f, -255.9f , 0.0f,0.0f, (uchar)255,(uchar)255,(uchar)0);
+                buffer.push( 255.9f, -255.9f , 1.0f,0.0f, (uchar)255,(uchar)0,(uchar)255);           
                 
+
+                gl::VertexBufferLayout layout2;
+                layout2 << gl::LayoutElement(2) << gl::LayoutElement(2) << gl::LayoutElement(3,GL_UNSIGNED_BYTE,true) << gl::LayoutElement(1);
+
+                gl::VertexBuffer buffer2(layout2, true);
+                buffer2.push(-555.9f,  55.9f , 0.0f,1.0f, (uchar)255,(uchar)0,(uchar)255, 0.1f);
+                buffer2.push( 555.9f,  55.9f , 1.0f,1.0f, (uchar)0,(uchar)255,(uchar)255, 0.1f);
+                buffer2.push(-555.9f, -55.9f , 0.0f,0.0f, (uchar)255,(uchar)255,(uchar)0, 0.1f);
+                buffer2.push( 555.9f, -55.9f , 1.0f,0.0f, (uchar)255,(uchar)0,(uchar)255, 0.1f);  
+
                 buffer.bind();
 
                 gl::Shader shader("res/basicVertex.glsl","res/basicFragment.glsl");
@@ -61,6 +89,7 @@ int main(int argc, char *argv[]) {
                 }
                 unsigned int frame = 0;
                 bool end = false;
+                unsigned int memo;
                 while (!end) {
 
                     SDL_Event ev;
@@ -73,8 +102,9 @@ int main(int argc, char *argv[]) {
                             case SDL_WINDOWEVENT: //resize
                                 switch (ev.window.event) {
                                 case SDL_WINDOWEVENT_SIZE_CHANGED:
-                                    glViewport(0, 0, ev.window.data1, ev.window.data2);
-                                    mvp = glm::ortho(-(float)ev.window.data1/2,(float)ev.window.data1/2,-(float)ev.window.data2/2,(float)ev.window.data2/2,-1.0f,1.0f);
+                                    int w = ev.window.data1, h = ev.window.data2;
+                                    glViewport(0, 0, w, h);
+                                    mvp = glm::ortho(-(float)w/2,(float)w/2,-(float)h/2,(float)h/2,-1.0f,1.0f);
                                     shader.update("MVP");
                                     break;
                                 }
@@ -85,11 +115,17 @@ int main(int argc, char *argv[]) {
                                     shader.recompile();
                         }
                     }
+                    buffer.bind();
                     glClear(GL_COLOR_BUFFER_BIT);
-                    
                     unsigned int ibo[] = { 0,1,2,3,1,2 };
                     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, &ibo);
-                    
+
+                    buffer2.bind();
+                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, &ibo);
+                    if (memo != getMemoryUsage()) {
+                        memo = getMemoryUsage();
+                        logInfo(memo);
+                    }
                     //glDrawArrays(GL_TRIANGLES,0, buffer.getDataCount());
                     SDL_GL_SwapWindow( window );
                     frame++;
@@ -101,5 +137,8 @@ int main(int argc, char *argv[]) {
         SDL_GL_DeleteContext(context);
     }
     SDL_DestroyWindow(window);
-    return EXIT_SUCCESS;
+    main_exit:
+    if (exitCode)
+        std::cin.get();
+    return exitCode;
 }
