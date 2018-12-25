@@ -1,0 +1,92 @@
+#pragma once
+
+namespace gl {
+
+    template<typename T>
+    class Vector2 {
+        public:
+        T x, y;
+
+        Vector2(const T& x = 0, const T& y = 0)
+         : x(x) , y(y) {}
+        Vector2(const Vector2& other)
+         : x(other.x) , y(other.y) {}
+
+        Vector2 operator +(const Vector2& v) const { return Vector2(x + v.x, y + v.y); }
+        Vector2 operator -(const Vector2& v) const { return Vector2(x - v.x, y - v.y); }
+        Vector2 operator *(const Vector2& v) const { return Vector2(x * v.x, y * v.y); }
+        Vector2 operator /(const Vector2& v) const { return Vector2(x / v.x, y / v.y); }
+
+
+        Vector2& operator =(const Vector2& v) { 
+            x = v.x; 
+            y = v.y; 
+            return *this; 
+        }
+
+        Vector2& operator +=(const Vector2& v) { 
+            x += v.x; 
+            y += v.y; 
+            return *this; 
+        }
+        Vector2& operator -=(const Vector2& v) { 
+            x -= v.x; 
+            y -= v.y; 
+            return *this; 
+        }
+        Vector2& operator *=(const Vector2& v) { 
+            x *= v.x; 
+            y *= v.y; 
+            return *this; 
+        }
+        Vector2& operator /=(const Vector2& v) { 
+            x /= v.x; 
+            y /= v.y; 
+            return *this; 
+        }
+
+        bool operator ==(const Vector2& v) const {
+            if(x == v.x && y == v.y)
+                return true;
+            else
+                return false;
+        }
+        bool operator !=(const Vector2& v) const {
+            if(x != v.x && y != v.y)
+                return true;
+            else
+                return false;
+        }
+
+
+        bool operator <(const Vector2& v) const{
+            if(x < v.x && y < v.y)
+                return true;
+            else
+                return false;
+        }
+        bool operator >(const Vector2& v) const {
+            if(x > v.x && y > v.y)
+                return true;
+            else
+                return false;
+        }
+
+
+        bool operator <=(const Vector2& v) const {
+            if(x <= v.x && y <= v.y)
+                return true;
+            else
+                return false;
+        }
+        bool operator >=(const Vector2& v) const {
+            if(x >= v.x && y >= v.y)
+                return true;
+            else
+                return false;
+        }
+
+    };
+
+    typedef Vector2<float> Vector2f;
+};
