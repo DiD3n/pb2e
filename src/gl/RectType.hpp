@@ -1,11 +1,7 @@
 #pragma once
 
 #include "VectorType.hpp"
-
-template<typename T>
-struct tmpGlRect{
-    T x, y, x2, y2;
-};
+#include <array>
 
 namespace gl {
 
@@ -14,7 +10,10 @@ namespace gl {
         public:
         T x, y, w, h;
 
-        tmpGlRect<T> getGlRect() {return {x,y,w+x,h+y};}
+        /* clockwise from the top left */
+        std::array<Vector2<T>,4> getVertices() const {
+            return std::array<Vector2<T>,4>{ Vector2<T>(x , y), Vector2<T>(x + w, y), Vector2<T>(x + w, y + h), Vector2<T>(x, y + h) }; 
+        }
 
         Rect(const T& x = 0, const T& y = 0,const T& w = 0, const T& h = 0)
          : x(x) , y(y) , w(w) , h(h) {}
@@ -106,6 +105,6 @@ namespace gl {
         }
     };
 
-    typedef Rect<float> Rectf
+    typedef Rect<float> Rectf;
 
 };
