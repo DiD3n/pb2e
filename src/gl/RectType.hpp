@@ -106,5 +106,9 @@ namespace gl {
     };
 
     typedef Rect<float> Rectf;
-
+    typedef Rect<double> Rectd;
+    typedef Rect<int> Recti;
+    typedef Rect<unsigned int> Rectui;
+    typedef Rect<char> Rectb;
+    typedef Rect<unsigned char> Rectub;
 };
