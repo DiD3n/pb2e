@@ -3,8 +3,26 @@
 #include "../include/glew.hpp"
 #include "../include/sdl2.hpp"
 #include "../logger.hpp"
+#include "../include/glm.hpp"
 
 namespace gl {
+
+    /* SubTexture */
+
+    void subTexture::genUV(const gl::Rectui& rect, bool isWHpos2) {
+        uv.x = (float)rect.x / texture.getSize().x;
+        uv.y = (float)rect.y / texture.getSize().y;
+        if (isWHpos2) {
+            uv.w = (float)rect.w / texture.getSize().x;
+            uv.h = (float)rect.h / texture.getSize().y;
+            return;
+        }
+        uv.w = (float)rect.w + (float)rect.x / texture.getSize().x;
+        uv.h = (float)rect.h + (float)rect.y / texture.getSize().y;
+    }
+
+    /* Texture */
+
     Texture::Texture(const std::string& path)
      : path(path) {
         glGenTextures(1,&id);
@@ -50,6 +68,9 @@ namespace gl {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
             
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w,surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmpSurface->pixels );
+            this->w = surface->w;
+            this->h = surface->h;
+            
             SDL_FreeSurface(tmpSurface);
         }   
 
@@ -57,10 +78,10 @@ namespace gl {
         return done;
     }
 
-    bool Texture::reload() {
+    bool Texture::reload() { //TODO: this
         return true;
     }
-
-    inline void Texture::bind()   const {glBindTexture(GL_TEXTURE_2D,id);};
-    inline void Texture::unBind() const {glBindTexture(GL_TEXTURE_2D, 0);};
+    
+    inline void Texture::bind()   const {if (legit) glBindTexture(GL_TEXTURE_2D,id);}
+    inline void Texture::unBind() const {if (legit) glBindTexture(GL_TEXTURE_2D, 0);}
 };
