@@ -12,6 +12,8 @@
 #include "gl/VertexBuffer.hpp"
 #include "gl/Shader.hpp"
 #include "gl/Texture.hpp"
+#include "gl/VectorType.hpp"
+#include "gl/RectType.hpp"
 
 #include "system/memory.hpp"
 
@@ -53,24 +55,32 @@ int main(int argc, char *argv[]) {
 					logError("Vsync problem!");
 				}
 
+
+                gl::Texture texture("res/weed.png");
+
                 gl::VertexBufferLayout layout;
                 layout << gl::LayoutElement(2) << gl::LayoutElement(2) << gl::LayoutElement(3,GL_UNSIGNED_BYTE,true);
 
                 gl::VertexBuffer buffer(layout, true);
-                buffer.push(-255.9f,  255.9f , 0.0f,1.0f, (uchar)255,(uchar)0,(uchar)255);
+                buffer.push(gl::Vector2f(-255.9f, 255.9f) , 0.0f,1.0f, (uchar)255,(uchar)0,(uchar)255);
                 buffer.push( 255.9f,  255.9f , 1.0f,1.0f, (uchar)0,(uchar)255,(uchar)255);
                 buffer.push(-255.9f, -255.9f , 0.0f,0.0f, (uchar)255,(uchar)255,(uchar)0);
                 buffer.push( 255.9f, -255.9f , 1.0f,0.0f, (uchar)255,(uchar)0,(uchar)255);           
                 
-
+                
                 gl::VertexBufferLayout layout2;
                 layout2 << gl::LayoutElement(2) << gl::LayoutElement(2) << gl::LayoutElement(3,GL_UNSIGNED_BYTE,true) << gl::LayoutElement(1);
 
                 gl::VertexBuffer buffer2(layout2, true);
-                buffer2.push(-555.9f,  55.9f , 0.0f,1.0f, (uchar)255,(uchar)0,(uchar)255, 0.1f);
-                buffer2.push( 555.9f,  55.9f , 1.0f,1.0f, (uchar)0,(uchar)255,(uchar)255, 0.1f);
-                buffer2.push(-555.9f, -55.9f , 0.0f,0.0f, (uchar)255,(uchar)255,(uchar)0, 0.1f);
-                buffer2.push( 555.9f, -55.9f , 1.0f,0.0f, (uchar)255,(uchar)0,(uchar)255, 0.1f);  
+
+                              /*  x     y     w     h   */
+                gl::Rectf rectt(-300.f,200.f,200.f,300.f);
+                gl::subTexture st(texture);
+                st.genUV({8,8,24,24},true);
+                buffer2.push(rectt.getVertices()[0], st.uv.x,st.uv.y, (uchar)255,(uchar)0,(uchar)255, 0.1f);
+                buffer2.push(rectt.getVertices()[1], st.uv.w,st.uv.y, (uchar)0,(uchar)255,(uchar)255, 0.1f);
+                buffer2.push(rectt.getVertices()[2], st.uv.w,st.uv.h, (uchar)255,(uchar)255,(uchar)0, 0.1f);
+                buffer2.push(rectt.getVertices()[3], st.uv.x,st.uv.h, (uchar)255,(uchar)0,(uchar)255, 0.1f);  
 
                 buffer.bind();
 
@@ -80,7 +90,6 @@ int main(int argc, char *argv[]) {
                 gl::Uniform un(true,mvp);
                 shader.pushUniform("MVP",un);
 
-                gl::Texture texture("res/weed.png");
 
                 shader.update();
 
@@ -121,11 +130,13 @@ int main(int argc, char *argv[]) {
                     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, &ibo);
 
                     buffer2.bind();
-                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, &ibo);
+                    unsigned int ibo2[] = { 0,1,2,0,3,2 };
+                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, &ibo2);
                     if (memo != getMemoryUsage()) {
                         memo = getMemoryUsage();
-                        logInfo(memo);
+                       logInfo(memo);
                     }
+                    gl::Vector2f vec;
                     //glDrawArrays(GL_TRIANGLES,0, buffer.getDataCount());
                     SDL_GL_SwapWindow( window );
                     frame++;
@@ -138,7 +149,7 @@ int main(int argc, char *argv[]) {
     }
     SDL_DestroyWindow(window);
     main_exit:
-    //if (exitCode)
+    if (exitCode)
         std::cin.get();
     return exitCode;
 }
