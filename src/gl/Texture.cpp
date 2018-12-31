@@ -9,7 +9,7 @@ namespace gl {
 
     /* SubTexture */
 
-    void subTexture::genUV(const gl::Rectui& rect, bool isWHpos2) {
+    void SubTexture::genUV(const gl::Rectui& rect, bool isWHpos2) {
         uv.x = (float)rect.x / texture.getSize().x;
         uv.y = (float)rect.y / texture.getSize().y;
         if (isWHpos2) {

@@ -10,12 +10,16 @@ namespace gl {
 
     class Texture;
 
-    class subTexture {
+    class SubTexture {
         public:
         const Texture& texture;
         Rectf uv;
-        subTexture(const Texture& texture)
+        SubTexture(const SubTexture& other)
+         : texture(other.texture) , uv(other.uv) {}
+        SubTexture(const Texture& texture)
          : texture(texture) {}
+         SubTexture(const Texture& texture, const Rectf& uv)
+         : texture(texture) , uv(uv) {}
         void genUV(const gl::Rectui& rect, bool isWHpos2 = false);
     };
 
@@ -41,6 +45,10 @@ namespace gl {
         inline void bind() const;
         inline void unBind() const;
 
+
+        operator SubTexture() {
+            return { *this, {0.f, 0.f, 1.f, 1.f} };
+        }    
     };
     
 };
