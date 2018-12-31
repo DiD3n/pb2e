@@ -15,7 +15,9 @@ namespace gl {
             return std::array<Vector2<T>,4>{ Vector2<T>(x , y), Vector2<T>(x + w, y), Vector2<T>(x + w, y + h), Vector2<T>(x, y + h) }; 
         }
 
-        Rect(const T& x = 0, const T& y = 0,const T& w = 0, const T& h = 0)
+        Rect(const T& a = 0)
+         : x(a) , y(a) , w(a) , h(a) {}
+        Rect(const T& x, const T& y,const T& w, const T& h)
          : x(x) , y(y) , w(w) , h(h) {}
         Rect(const Rect& other)
          : x(other.x) , y(other.y), w(other.w) , h(other.h) {}
