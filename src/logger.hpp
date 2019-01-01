@@ -15,6 +15,9 @@
 #define DEBUG
 
 #ifdef DEBUG
+
+#define cppToString(x) #x
+
 #define logInfo(args...) _raw(args, " :", __FILE__, "\b:",__LINE__)
 
 #define logError(args...) if('\0' != *SDL_GetError()){\
@@ -29,6 +32,7 @@ while (unsigned int code = glGetError())\
 _raw( #x, "-" , getErrorMsg(code), "at", __FILE__, "\b:",__LINE__)\
 
 #else
+#define cppToString(x) ""
 #define logInfo(args...);
 #define logError(args...);
 #define GLCall(x) x
