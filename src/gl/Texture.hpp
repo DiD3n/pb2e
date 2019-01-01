@@ -37,6 +37,8 @@ namespace gl {
         Texture(const Texture& other);
         ~Texture();
 
+        bool operator==(const Texture& other) const {return (id == other.id);}
+
         bool reload();
 
         constexpr bool isLegit() const {return legit;}

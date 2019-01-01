@@ -36,10 +36,15 @@ namespace gl {
 
         public:
 
+
         Shader(const Shader&);
 
         Shader(const std::string& vertexSourcePath, const std::string& fragmentSourcePath);
         ~Shader() {glDeleteProgram(programID);}
+
+        bool operator ==(const Shader& other) const {
+            return (programID == other.programID);
+        }
 
         void recompile();
 
@@ -50,7 +55,6 @@ namespace gl {
 
         void update() const; /* all */
         void update(const std::string& name) const; /* specific one */
-        
         void update(const std::string& name, const Uniform&);
 
         bool pushUniform(const std::string& name, const Uniform&);
