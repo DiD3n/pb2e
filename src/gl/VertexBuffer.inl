@@ -24,12 +24,12 @@ namespace gl {
 
     template<typename T, typename ... T2> 
     void VertexBuffer::push(const T& arg,const T2&... args) {
-        if (vbl->stride == sizeOfMulti(arg,args...)) {
-            data = (void*)realloc((void*)data, dataSize + vbl->stride);
+        if (vbl.stride == sizeOfMulti(arg,args...)) {
+            data = (void*)realloc((void*)data, dataSize + vbl.stride);
             pushData((char*)data + dataSize, arg, args...);
-            dataSize += vbl->stride;
+            dataSize += vbl.stride;
         } else {
-            logError("gl::VertexBuffer::push()","- data size(",sizeOfMulti(arg,args...),") isn't equal stride(",vbl->stride,")... skipping");
+            logError("gl::VertexBuffer::push()","- data size(",sizeOfMulti(arg,args...),") isn't equal stride(",vbl.stride,")... skipping");
         }
 
     }

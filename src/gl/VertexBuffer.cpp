@@ -4,12 +4,12 @@
 
 namespace gl {
 
-    VertexBuffer::VertexBuffer(VertexBufferLayout& vbl, bool ref) {
-        if (ref) {
-            this->vbl = &vbl;
-        } else {
-            this->vbl = new VertexBufferLayout(vbl);
-        }
+    VertexBuffer::VertexBuffer(const VertexBuffer& other) {
+        VertexBuffer(other.vbl);
+    }
+
+    VertexBuffer::VertexBuffer(const VertexBufferLayout& vbl) : vbl(vbl) {
+
         GLCall(glGenVertexArrays(1, &VAOID));
         GLCall(glBindVertexArray(VAOID));
 
@@ -20,10 +20,10 @@ namespace gl {
         /*  layout setting  */
         
         int offset = 0;
-        for (int i = 0; i < this->vbl->list.size(); i++) {
-            GLCall(glVertexAttribPointer(i , this->vbl->list[i].count , this->vbl->list[i].type , (int)this->vbl->list[i].normalized , this->vbl->stride , (const void*)offset));
+        for (int i = 0; i < this->vbl.list.size(); i++) {
+            GLCall(glVertexAttribPointer(i , this->vbl.list[i].count , this->vbl.list[i].type , (int)this->vbl.list[i].normalized , this->vbl.stride , (const void*)offset));
             GLCall(glEnableVertexAttribArray(i));
-            offset += this->vbl->list[i].count * this->vbl->list[i].getTypeSize();
+            offset += this->vbl.list[i].count * this->vbl.list[i].getTypeSize();
         }
         data = nullptr;
     }
