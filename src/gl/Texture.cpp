@@ -78,10 +78,10 @@ namespace gl {
         return done;
     }
 
-    bool Texture::reload() { //TODO: this
+    bool Texture::reload() { //TODO: Dynamic reload
         return true;
     }
     
-    inline void Texture::bind()   const {if (legit) glBindTexture(GL_TEXTURE_2D,id);}
-    inline void Texture::unBind() const {if (legit) glBindTexture(GL_TEXTURE_2D, 0);}
+    void Texture::bind()   const {if (legit) glBindTexture(GL_TEXTURE_2D,id);}
+    void Texture::unBind() const {if (legit) glBindTexture(GL_TEXTURE_2D, 0);}
 };
