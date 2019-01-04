@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 namespace gl {
 
     template<typename T>
@@ -11,6 +13,8 @@ namespace gl {
          : x(x) , y(y) {}
         Vector2(const Vector2& other)
          : x(other.x) , y(other.y) {}
+
+        operator std::array<Vector2<float>,1>() { return {*this};}
 
         Vector2 operator +(const Vector2& v) const { return Vector2(x + v.x, y + v.y); }
         Vector2 operator -(const Vector2& v) const { return Vector2(x - v.x, y - v.y); }

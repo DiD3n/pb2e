@@ -12,8 +12,9 @@ namespace gl {
 
         /* clockwise from the top left */
         std::array<Vector2<T>,4> getVertices() const {
-            return std::array<Vector2<T>,4>{ Vector2<T>(x , y), Vector2<T>(x + w, y), Vector2<T>(x + w, y + h), Vector2<T>(x, y + h) }; 
+            return { Vector2<T>(x , y), Vector2<T>(x + w, y), Vector2<T>(x + w, y + h), Vector2<T>(x, y + h) }; 
         }
+        operator std::array<Vector2<T>,4>() { return getVertices(); }
 
         Rect(const T& a = 0)
          : x(a) , y(a) , w(a) , h(a) {}
