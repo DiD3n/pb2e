@@ -16,7 +16,7 @@ static void pushDataArray(T* data, const T& arg, const T2&... args) {
 
 namespace gl {
 
-    enum UniformType : int { //TODO: double
+    enum UniformType : int { //TODO: Add double support!
         vec1f   = 0,   vec1ui  = 1,   vec1i   = 2,
         vec2f   = 20,  vec2ui  = 21,  vec2i   = 22,
         vec3f   = 30,  vec3ui  = 31,  vec3i   = 32,

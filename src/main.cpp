@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <chrono>
 
 #define _DEBUG
 
@@ -14,13 +15,13 @@
 #include "gl/Texture.hpp"
 #include "gl/VectorType.hpp"
 #include "gl/RectType.hpp"
+#include "gl/Renderer.hpp"
 
 #include "system/memory.hpp"
 
 typedef unsigned char uchar;
 
 int main(int argc, char *argv[]) {
-    logInfo(getMemoryUsage()/1024, "- start");
     int exitCode = EXIT_SUCCESS;
     SDL_Window* window = NULL;
 
@@ -37,8 +38,7 @@ int main(int argc, char *argv[]) {
             goto main_exit;
         }
     }
-    logInfo(getMemoryUsage());
-    window = SDL_CreateWindow("openGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("pb2e - openGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
     if (!window) {
         logError("SDL_CreateWindow");
     } else {
@@ -55,43 +55,25 @@ int main(int argc, char *argv[]) {
 					logError("Vsync problem!");
 				}
 
-
+                gl::Renderer renderer;
                 gl::Texture texture("res/weed.png");
-
-                gl::VertexBufferLayout layout;
-                layout << gl::LayoutElement(2) << gl::LayoutElement(2) << gl::LayoutElement(3,GL_UNSIGNED_BYTE,true);
-
-                gl::VertexBuffer buffer(layout, true);
-                buffer.push(gl::Vector2f(-255.9f, 255.9f) , 0.0f,1.0f, (uchar)255,(uchar)0,(uchar)255);
-                buffer.push( 255.9f,  255.9f , 1.0f,1.0f, (uchar)0,(uchar)255,(uchar)255);
-                buffer.push(-255.9f, -255.9f , 0.0f,0.0f, (uchar)255,(uchar)255,(uchar)0);
-                buffer.push( 255.9f, -255.9f , 1.0f,0.0f, (uchar)255,(uchar)0,(uchar)255);           
-                
-                
-                gl::VertexBufferLayout layout2;
-                layout2 << gl::LayoutElement(2) << gl::LayoutElement(2) << gl::LayoutElement(3,GL_UNSIGNED_BYTE,true) << gl::LayoutElement(1);
-
-                gl::VertexBuffer buffer2(layout2, true);
-
-                              /*  x     y     w     h   */
-                gl::Rectf rectt(-300.f,200.f,200.f,300.f);
-                gl::subTexture st(texture);
-                st.genUV({8,8,24,24},true);
-                buffer2.push(rectt.getVertices()[0], st.uv.x,st.uv.y, (uchar)255,(uchar)0,(uchar)255, 0.1f);
-                buffer2.push(rectt.getVertices()[1], st.uv.w,st.uv.y, (uchar)0,(uchar)255,(uchar)255, 0.1f);
-                buffer2.push(rectt.getVertices()[2], st.uv.w,st.uv.h, (uchar)255,(uchar)255,(uchar)0, 0.1f);
-                buffer2.push(rectt.getVertices()[3], st.uv.x,st.uv.h, (uchar)255,(uchar)0,(uchar)255, 0.1f);  
-
-                buffer.bind();
-
                 gl::Shader shader("res/basicVertex.glsl","res/basicFragment.glsl");
 
                 glm::mat4 mvp = glm::ortho(-400.0f,400.0f,-300.0f,300.0f,-1.0f,1.0f);
-                gl::Uniform un(true,mvp);
-                shader.pushUniform("MVP",un);
+                
+                {
+                    gl::Uniform un(true,mvp);
+                    shader.pushUniform("MVP",un);
+                    shader.update();
 
+                    gl::VertexBufferLayout layout;
+                    layout << gl::LayoutElement(2) << gl::LayoutElement(2) << gl::LayoutElement(3,GL_UNSIGNED_BYTE,true);
+                    renderer.pushCustomLayout(layout,texture,shader);
+                }
+                
 
-                shader.update();
+                gl::Rectf weedSize(-128.f,-128.f,256.f,256.f);      
+                gl::Rectf rectt(-100.f,-100.f,300.f,300.f);
 
                 while(unsigned int err = glGetError()) {
                     std::cout << err << "\n";
@@ -99,8 +81,10 @@ int main(int argc, char *argv[]) {
                 unsigned int frame = 0;
                 bool end = false;
                 unsigned int memo;
-                while (!end) {
 
+                auto lastTime = std::chrono::high_resolution_clock::now();
+                while (!end) {
+                    
                     SDL_Event ev;
                     while (SDL_PollEvent(&ev)) {
                         switch (ev.type) {
@@ -119,29 +103,36 @@ int main(int argc, char *argv[]) {
                                 }
                             break;
 
+                            case SDL_MOUSEWHEEL:
+                            float c;
+                            if(ev.wheel.y > 0)
+                                c = weedSize.h* 1.1f - weedSize.h;
+                            else if(ev.wheel.y < 0)
+                                c = weedSize.h* 0.9f - weedSize.h;
+                            weedSize.h += c;
+                            weedSize.w += c;
+                            weedSize.x -= c/2;
+                            weedSize.y -= c/2;
+                            break;
+
                             case SDL_KEYUP: //recompile
                                 if (ev.key.keysym.sym == SDLK_r)
                                     shader.recompile();
                         }
                     }
-                    buffer.bind();
                     glClear(GL_COLOR_BUFFER_BIT);
-                    unsigned int ibo[] = { 0,1,2,3,1,2 };
-                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, &ibo);
 
-                    buffer2.bind();
-                    unsigned int ibo2[] = { 0,1,2,0,3,2 };
-                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, &ibo2);
-                    if (memo != getMemoryUsage()) {
-                        memo = getMemoryUsage();
-                       logInfo(memo);
-                    }
-                    gl::Vector2f vec;
-                    //glDrawArrays(GL_TRIANGLES,0, buffer.getDataCount());
+                    renderer.clear();
+                    
+                    renderer.draw<gl::rectangle>(shader,texture,rectt,(uchar)255,(uchar)0,(uchar)255);
+                    renderer.draw<gl::rectangle>(shader,texture,weedSize,(uchar)255,(uchar)255,(uchar)0);
+                    
+                    renderer.finalRender();
+                    
                     SDL_GL_SwapWindow( window );
                     frame++;
                     while (unsigned int err = glGetError())
-                        std::cout << err << '\n';
+                        logError(err);
                 }
             }
         }
