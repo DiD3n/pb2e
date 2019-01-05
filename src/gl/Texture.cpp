@@ -82,6 +82,16 @@ namespace gl {
         return true;
     }
     
-    void Texture::bind()   const {if (legit) glBindTexture(GL_TEXTURE_2D,id);}
+    void Texture::bind() const {
+        static unsigned int bindID;
+        if (bindID == id) 
+            return;
+        if (legit) {
+            glBindTexture(GL_TEXTURE_2D,id);
+            bindID = id;
+        }
+            
+        
+    }
     void Texture::unBind() const {if (legit) glBindTexture(GL_TEXTURE_2D, 0);}
 };
