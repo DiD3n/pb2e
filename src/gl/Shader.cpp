@@ -150,6 +150,21 @@ namespace gl {
             logError("gl::Shader::updateShaderUniform(uniformType:",data.uniform.get().type,") - Unknown type... skipping!");
         }
     }
+
+
+    void Shader::bind() const {
+        static unsigned int bindID;
+        if (bindID == programID)
+            return;
+        if (legit) {
+            bindID = programID;
+            glUseProgram(programID);
+        } 
+    }
+    void Shader::unBind() const {
+        glUseProgram(0);
+    }
+
     
     /* update */
 
