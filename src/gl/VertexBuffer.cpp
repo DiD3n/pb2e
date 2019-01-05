@@ -43,8 +43,12 @@ namespace gl {
     }
 
     void VertexBuffer::bind() const{
-        GLCall(glBindVertexArray(VAOID));
-        GLCall(glBindBuffer(GL_ARRAY_BUFFER, BufferID));
+        static unsigned int bindID;
+        if (bindID != VAOID) {
+            bindID = VAOID;
+            GLCall(glBindVertexArray(VAOID));
+            GLCall(glBindBuffer(GL_ARRAY_BUFFER, BufferID));
+        }
         GLCall(glBufferData(GL_ARRAY_BUFFER, dataSize, data, GL_DYNAMIC_DRAW));
     }
 

@@ -9,7 +9,7 @@
 
 namespace gl {
 
-    //class Renderer;
+    class Renderer;
 
     class VertexBuffer {
         private:
@@ -34,7 +34,7 @@ namespace gl {
 
         void bind() const;
         void unBind() const;
-        //friend Renderer;
+        friend Renderer;
     };
 
 };
