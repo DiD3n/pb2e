@@ -15,8 +15,7 @@ namespace gl {
         unsigned int type = 0;
         bool normalized = false;
 
-        unsigned int getTypeSize() const { //v1.1
-
+        constexpr unsigned int getTypeSize() const { //v1.1
             switch (type) {
                 case GL_FLOAT:         return sizeof(GLfloat);
                 case GL_DOUBLE:        return sizeof(GLdouble);
@@ -41,6 +40,7 @@ namespace gl {
 
         VertexBufferLayout(const VertexBufferLayout&);
         VertexBufferLayout() : stride(0) {}
+        ~VertexBufferLayout() {}
 
         VertexBufferLayout& operator += (const LayoutElement&);
         VertexBufferLayout& operator << (const LayoutElement&);
