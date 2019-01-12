@@ -1,0 +1,19 @@
+{
+    "name": "forest",
+    "type": "sprite",
+    "img": "./ForestMisc.png",
+    "sprites": [
+        {
+            "x": 0,
+            "y": 0,
+            "w": 16,
+            "h": 16
+        },
+        {
+            "x": 16,
+            "y": 0,
+            "w": 16,
+            "h": 16
+        }
+    ]
+}
