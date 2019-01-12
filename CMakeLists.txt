@@ -6,6 +6,8 @@ file(GLOB_RECURSE cppf "src/*.cpp")
 add_executable(pb2e ${cppf})
 
 set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 #Build counter
 file(STRINGS "BuildCounter.txt" BUILD_NUMBER)
@@ -14,24 +16,30 @@ file(WRITE "BuildCounter.txt" ${BUILD_NUMBER_CALCULATED})
 
 add_definitions(-DBuild_Counter=${BUILD_NUMBER_CALCULATED})
 
+
 if (${WIN32})
-		
-    target_link_libraries(pb2e -lmingw32)
-    target_link_libraries(pb2e -lSDL2main)
-    target_link_libraries(pb2e -lSDL2)
-    target_link_libraries(pb2e -lSDL2_image)
-    #target_link_libraries(pb2e -lSDL2_mixer)
-    target_link_libraries(pb2e -lSDL2_ttf)
-    target_link_libraries(pb2e -lglew32s -lOpenGL32 -lGLU32 -static-libgcc -static-libstdc++)
+
+    #MINGW
+    target_link_libraries(pb2e -lmingw32 -static-libgcc -static-libstdc++)
+    #SDL2
+    target_link_libraries(pb2e -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf)# -lSDL2_mixer)
+    #GL
+    target_link_libraries(pb2e -lglew32s -lOpenGL32 -lGLU32)
+    #WINDOWS
     target_link_libraries(pb2e -lKernel32 -lPsapi)
+
+    add_definitions(-DCM_WINDOWS)
 
 elseif(${UNIX})
 
-    target_link_libraries(pb2e -lSDL2)
-    target_link_libraries(pb2e -lSDL2_image)
-    #target_link_libraries(pb2e -lSDL2_mixer)
-    target_link_libraries(pb2e -lSDL2_ttf)
+    message("You're using Linux, I don't know if everything works, be careful!")
+
+    #SDL2
+    target_link_libraries(pb2e -lSDL2 -lSDL2_image -lSDL2_ttf)# -lSDL2_mixer)
+    #GL
     target_link_libraries(pb2e -lGL -lGLEW)
+
+    add_definitions(-DCM_LINUX)
 
 elseif()
 
@@ -39,4 +47,4 @@ elseif()
 
 endif()
 
-target_link_libraries(pb2e -g)
+target_link_libraries(pb2e)
