@@ -2,14 +2,20 @@
 
 #include <string>
 #include "RectType.hpp"
+#include "VectorType.hpp"
 
 #define GL_TEXTURE_2D 0x0DE1
-
+#define GL_LINEAR 0x2601
+#define GL_NEAREST 0x2600
 
 namespace gl {
 
-    class Texture;
+    enum TextureFiltering {
+        linear = GL_LINEAR,
+        nearest = GL_NEAREST
+    };
 
+    class Texture;
     class SubTexture {
         public:
         const Texture& texture;
@@ -28,12 +34,14 @@ namespace gl {
         unsigned int id;
         unsigned int w, h;
         const std::string path;
+        const TextureFiltering filter;
         bool legit;
 
         bool load();
 
     public:
-        Texture(const std::string& path);
+        Texture(const Vector2i& size, const TextureFiltering& = linear);
+        Texture(const std::string& path, const TextureFiltering& = nearest);
         Texture(const Texture& other);
         ~Texture();
 

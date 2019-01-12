@@ -23,17 +23,30 @@ namespace gl {
 
     /* Texture */
 
-    Texture::Texture(const std::string& path)
-     : path(path) {
-        glGenTextures(1,&id);
+    Texture::Texture(const std::string& path, const TextureFiltering& filter)
+     : path(path) , filter(filter) {
+        GLCall(glGenTextures(1,&id));
         legit = this->load();
     }
-    Texture::Texture(const Texture& other) {
-        Texture(other.path);
+    Texture::Texture(const Vector2i& size, const TextureFiltering& filter)
+     : path("") , filter(filter) {
+        GLCall(glGenTextures(1,&id));
+
+        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter));
+        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter));
+        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER));
+        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER));
+
+        GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL));
+    }
+    Texture::Texture(const Texture& other)
+     : path(path) , filter(filter) {
+        GLCall(glGenTextures(1,&id));
+        legit = this->load(); 
     }
 
     Texture::~Texture() {
-        glDeleteTextures(1, &this->id);
+        GLCall(glDeleteTextures(1, &this->id));
     }
 
     bool Texture::load() {
@@ -62,12 +75,12 @@ namespace gl {
                 tmpSurface = surface;
             }
     
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+            GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter));
+            GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter));
+            GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER));
+            GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER));
             
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w,surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmpSurface->pixels );
+            GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w,surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmpSurface->pixels));
             this->w = surface->w;
             this->h = surface->h;
             
