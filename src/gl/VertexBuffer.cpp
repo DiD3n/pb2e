@@ -1,21 +1,32 @@
 #include "VertexBuffer.hpp"
 
-
+#include "../logger.hpp"
+#include "../include/glew.hpp"
 
 namespace gl {
 
-    VertexBuffer::VertexBuffer(const VertexBuffer& other) {
+    VertexBuffer::VertexBuffer(const VertexBuffer& other) : vbl(other.vbl) {
+
         VertexBuffer(other.vbl);
+
+        /* coping the data */
+
+        if (other.dataSize == 0)
+            return;
+
+        data = (void*)realloc((void*)data, other.dataSize);
+        memcpy(data, other.data, other.dataSize);
+        
     }
 
     VertexBuffer::VertexBuffer(const VertexBufferLayout& vbl) : vbl(vbl) {
 
+        /* some gl stuff */
         GLCall(glGenVertexArrays(1, &VAOID));
         GLCall(glBindVertexArray(VAOID));
 
         GLCall(glGenBuffers(1, &BufferID));
         GLCall(glBindBuffer(GL_ARRAY_BUFFER, BufferID));
-
 
         /*  layout setting  */
         
@@ -29,6 +40,7 @@ namespace gl {
     }
 
     VertexBuffer::~VertexBuffer() {
+        
         GLCall(glDeleteBuffers(1, &BufferID));
         GLCall(glDeleteBuffers(1, &VAOID));
         this->clear();
@@ -36,25 +48,24 @@ namespace gl {
 
 
     VertexBuffer& VertexBuffer::clear() {
+
         free(data);
         data = nullptr;
         dataSize = 0;
+
         return *this;
     }
 
-    void VertexBuffer::bind() const{
-        static unsigned int bindID;
-        if (bindID != VAOID) {
-            bindID = VAOID;
+    void VertexBuffer::use() const {
+        static unsigned int lastID;
+
+        if (lastID != VAOID) {
+            lastID = VAOID;
+            
             GLCall(glBindVertexArray(VAOID));
             GLCall(glBindBuffer(GL_ARRAY_BUFFER, BufferID));
         }
+
         GLCall(glBufferData(GL_ARRAY_BUFFER, dataSize, data, GL_DYNAMIC_DRAW));
-    }
-
-    void VertexBuffer::unBind() const{
-        GLCall(glBindBuffer(GL_ARRAY_BUFFER,0));
-    }   
-
-
+    } 
 };

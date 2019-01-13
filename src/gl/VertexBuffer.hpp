@@ -1,26 +1,26 @@
 #pragma once
 
 #include "VertexBufferLayout.hpp"
-#include "RectType.hpp"
-
-#include "../logger.hpp"
-#include "../include/glew.hpp"
 
 
 namespace gl {
 
     class Renderer;
 
-    class VertexBuffer {
-        private:
+    class VertexBuffer { //TODO: optimization
+    private:
+
         void* data = nullptr;
         unsigned int dataSize = 0;
+        
         unsigned int BufferID = 0, VAOID = 0;
-        bool legit = true;
-        VertexBufferLayout vbl;
 
-        public:
-        VertexBuffer(const VertexBuffer& other); //TODO: Copy constructor
+        bool legit = true;
+        const VertexBufferLayout vbl;
+
+    public:
+
+        VertexBuffer(const VertexBuffer& other);
         VertexBuffer(const VertexBufferLayout& vbl);
         ~VertexBuffer();
 
@@ -32,8 +32,7 @@ namespace gl {
 
         VertexBuffer& clear();
 
-        void bind() const;
-        void unBind() const;
+        void use() const;
         friend Renderer;
     };
 
