@@ -10,9 +10,14 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 #Build counter
-file(STRINGS "BuildCounter.txt" BUILD_NUMBER)
-math(EXPR BUILD_NUMBER_CALCULATED ${BUILD_NUMBER}+1)
-file(WRITE "BuildCounter.txt" ${BUILD_NUMBER_CALCULATED})
+if(EXISTS "BuildCounter.txt")
+
+    file(STRINGS "BuildCounter.txt" BUILD_NUMBER)
+    math(EXPR BUILD_NUMBER_CALCULATED ${BUILD_NUMBER}+1)
+    file(WRITE "BuildCounter.txt" ${BUILD_NUMBER_CALCULATED})
+
+endif()
+
 
 add_definitions(-DBuild_Counter=${BUILD_NUMBER_CALCULATED})
 
