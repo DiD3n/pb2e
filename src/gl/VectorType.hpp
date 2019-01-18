@@ -9,9 +9,9 @@ namespace gl {
         public:
         T x, y;
 
-        Vector2(const T& x = 0, const T& y = 0)
+        constexpr Vector2(const T& x = 0, const T& y = 0)
          : x(x) , y(y) {}
-        Vector2(const Vector2& other)
+        constexpr Vector2(const Vector2& other)
          : x(other.x) , y(other.y) {}
 
         operator std::array<Vector2<float>,1>() { return {*this};}
