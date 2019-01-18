@@ -16,6 +16,7 @@
 #include "gl/VectorType.hpp"
 #include "gl/RectType.hpp"
 #include "gl/Renderer.hpp"
+#include "gl/FrameBuffer.hpp"
 
 #include "system/memory.hpp"
 
@@ -56,8 +57,12 @@ int main(int argc, char *argv[]) {
 				}
 
                 gl::Renderer renderer;
-                gl::Texture texture("res/weed.png");
+                gl::Texture texture("res/weed.png", gl::nearest);
                 gl::Shader shader("res/basicVertex.glsl","res/basicFragment.glsl");
+                gl::FrameBuffer frameBuffer({800,600});
+
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
                 glm::mat4 mvp = glm::ortho(-400.0f,400.0f,-300.0f,300.0f,-1.0f,1.0f);
                 
@@ -69,12 +74,34 @@ int main(int argc, char *argv[]) {
                     gl::VertexBufferLayout layout;
                     layout << gl::LayoutElement(2) << gl::LayoutElement(2) << gl::LayoutElement(3,GL_UNSIGNED_BYTE,true);
                     renderer.pushCustomLayout(layout,texture,shader);
+                    renderer.pushCustomLayout(layout,frameBuffer.getAsTexture(),shader);
                 }
+                gl::VertexBufferLayout layout;
+                layout << gl::LayoutElement(2) << gl::LayoutElement(2) << gl::LayoutElement(3,GL_UNSIGNED_BYTE,true);
+
+
+
+                gl::VertexBuffer myBuffer(layout);
+                
+                
+                    gl::Rectf rect(-400.f,-400.f,800.f,800.f);
+                    gl::SubTexture st(texture,{0.f, 0.f, 1.f, 1.f});
+                    myBuffer.use();
+                    for (int i = 0; i < 4; i++) {
+                        myBuffer.push(rect.getVertices()[i], st.uv.getVertices()[i],(uchar)128,(uchar)255,(uchar)0);
+                    }
+                
+                
+                gl::VertexBuffer myNewBuffer(myBuffer);
+                /**/
+                    
+                
+                
                 
 
-                gl::Rectf weedSize(-128.f,-128.f,256.f,256.f);      
+                gl::Rectf weedSize(-400.f,-300.f,800.f,600.f);      
                 gl::Rectf rectt(-100.f,-100.f,300.f,300.f);
-
+ 
                 while(unsigned int err = glGetError()) {
                     std::cout << err << "\n";
                 }
@@ -82,7 +109,9 @@ int main(int argc, char *argv[]) {
                 bool end = false;
                 unsigned int memo;
 
-                auto lastTime = std::chrono::high_resolution_clock::now();
+                
+
+                auto time = std::chrono::high_resolution_clock::now();
                 while (!end) {
                     
                     SDL_Event ev;
@@ -123,12 +152,29 @@ int main(int argc, char *argv[]) {
                     glClear(GL_COLOR_BUFFER_BIT);
 
                     renderer.clear();
-                    
-                    renderer.draw<gl::rectangle>(shader,texture,rectt,(uchar)255,(uchar)0,(uchar)255);
-                    renderer.draw<gl::rectangle>(shader,texture,weedSize,(uchar)255,(uchar)255,(uchar)0);
-                    
+
+
+
+                    frameBuffer.use();
+                    glClear(GL_COLOR_BUFFER_BIT);
+                    renderer.draw<gl::rectangle>(shader,texture,weedSize,(uchar)255,(uchar)255,(uchar)255);
+                    renderer.draw<gl::rectangle>(shader,texture,rectt,(uchar)128,(uchar)255,(uchar)128);
                     renderer.finalRender();
+                    frameBuffer.use(false);
+                    renderer.clear();
+                    renderer.draw<gl::rectangle>(shader,texture,weedSize,(uchar)128,(uchar)128,(uchar)255);
+                    renderer.draw<gl::rectangle>(shader,frameBuffer.getAsTexture(),rectt,(uchar)255,(uchar)255,(uchar)255);
+                    renderer.finalRender();
+                    //frameBuffer.use(false);
+                    //
                     
+                    
+                    //renderer.draw<gl::rectangle>(shader,frameBuffer.getAsTexture(),rectt);
+                    //renderer.finalRender();
+                    
+                    //std::cout << (std::chrono::high_resolution_clock::now() - time).count()/100000 << '\n';
+                    time = std::chrono::high_resolution_clock::now();
+
                     SDL_GL_SwapWindow( window );
                     frame++;
                     while (unsigned int err = glGetError())
