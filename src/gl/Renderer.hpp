@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <list>
 #include <array>
 
 #include "VertexBuffer.hpp"
@@ -34,8 +35,8 @@ namespace gl {
 
     
 
-    class Renderer {
-        std::vector<BufferDB> buffers;
+    class Renderer { //TODO: rewrite
+        std::list<BufferDB> buffers;
         public:
 
         void pushCustomLayout(const VertexBufferLayout& layout, const SubTexture& texture, const Shader& shader);

@@ -8,17 +8,22 @@ namespace gl {
 
     void Renderer::finalRender() {
         for (BufferDB& i : buffers) {
-            i.buffer.bind();
+
+            i.buffer.use();
             i.shader.bind();
             i.texture.bind();
+
             GLCall(glDrawElements(GL_TRIANGLES,i.ibo.size(),GL_UNSIGNED_INT, (void*)&(i.ibo[0])));
+
         }
     }
 
     void Renderer::clear() {
         for (BufferDB& i : buffers) {
+
             i.ibo.clear();
             i.buffer.clear();
+            
         }
     }
 
