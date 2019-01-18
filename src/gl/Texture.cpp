@@ -29,20 +29,23 @@ namespace gl {
         legit = this->load();
     }
     Texture::Texture(const Vector2i& size, const TextureFiltering& filter)
-     : path("") , filter(filter) {
+     : path("") , filter(filter) , w(size.x) , h(size.y) {
         GLCall(glGenTextures(1,&id));
+        bind();
 
-        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter));
-        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter));
-        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER));
-        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER));
+        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+	    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)); 
+	    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+	    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
-        GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL));
+        GLCall(glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, size.x, size.y, 0,GL_RGB, GL_UNSIGNED_BYTE, 0));
+        unBind();
+        legit = true;
     }
     Texture::Texture(const Texture& other)
      : path(path) , filter(filter) {
-        GLCall(glGenTextures(1,&id));
-        legit = this->load(); 
+        GLCall(glGenTextures(1,&id)); 
+        logInfo("Texture::Texture(const Texture&) - is not coping the texture!");
     }
 
     Texture::~Texture() {
@@ -74,7 +77,7 @@ namespace gl {
             else {
                 tmpSurface = surface;
             }
-    
+            bind();
             GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter));
             GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter));
             GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER));
@@ -83,8 +86,8 @@ namespace gl {
             GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w,surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmpSurface->pixels));
             this->w = surface->w;
             this->h = surface->h;
-            
             SDL_FreeSurface(tmpSurface);
+            done = true;
         }   
 
         SDL_FreeSurface(surface);

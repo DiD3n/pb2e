@@ -23,12 +23,13 @@ namespace gl {
         SubTexture(const SubTexture& other)
          : texture(other.texture) , uv(other.uv) {}
         SubTexture(const Texture& texture)
-         : texture(texture) {}
+         : texture(texture) , uv(0.f, 0.f, 1.f, 1.f) {}
          SubTexture(const Texture& texture, const Rectf& uv)
          : texture(texture) , uv(uv) {}
         void genUV(const gl::Rectui& rect, bool isWHpos2 = false);
     };
 
+    class FrameBuffer;
     class Texture {
     private:
         unsigned int id;
@@ -45,12 +46,12 @@ namespace gl {
         Texture(const Texture& other);
         ~Texture();
 
-        bool operator==(const Texture& other) const {return (id == other.id);}
+        constexpr bool operator==(const Texture& other) const {return (id == other.id);}
 
         bool reload();
 
         constexpr bool isLegit() const {return legit;}
-        Vector2ui getSize() const {return {w,h};}
+        constexpr Vector2ui getSize() const {return {w,h};}
 
         void bind() const;
         void unBind() const;
@@ -59,6 +60,7 @@ namespace gl {
         operator SubTexture() {
             return { *this, {0.f, 0.f, 1.f, 1.f} };
         }    
+        friend FrameBuffer;
     };
     
 };
