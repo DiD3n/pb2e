@@ -66,8 +66,8 @@ namespace gl {
                 if (lastID != id) {
                     lastID = id;
                     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, id));
-                    return;
                 }
+                return;
             }
         }
             
