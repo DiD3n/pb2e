@@ -41,7 +41,7 @@ namespace gl {
         bool load();
 
     public:
-        Texture(const Vector2i& size, const TextureFiltering& = linear);
+        Texture(const Vector2ui& size, const TextureFiltering& = linear);
         Texture(const std::string& path, const TextureFiltering& = nearest);
         Texture(const Texture& other);
         ~Texture();

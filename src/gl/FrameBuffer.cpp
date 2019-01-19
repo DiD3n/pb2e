@@ -5,7 +5,7 @@
 
 namespace gl {
 
-    FrameBuffer::FrameBuffer(const Vector2i& size)
+    FrameBuffer::FrameBuffer(const Vector2ui& size)
      : size(size) , texture(nullptr) , legit(true) {
         GLCall(glGenFramebuffers(1,&id));
         setup();

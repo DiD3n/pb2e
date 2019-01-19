@@ -28,7 +28,7 @@ namespace gl {
         GLCall(glGenTextures(1,&id));
         legit = this->load();
     }
-    Texture::Texture(const Vector2i& size, const TextureFiltering& filter)
+    Texture::Texture(const Vector2ui& size, const TextureFiltering& filter)
      : path("") , filter(filter) , w(size.x) , h(size.y) {
         GLCall(glGenTextures(1,&id));
         bind();
