@@ -31,7 +31,7 @@ namespace gl {
     Texture::Texture(const Vector2ui& size, const TextureFiltering& filter)
      : path("") , filter(filter) , w(size.x) , h(size.y) {
         GLCall(glGenTextures(1,&id));
-        bind();
+        use();
 
         GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 	    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)); 
@@ -39,7 +39,7 @@ namespace gl {
 	    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
         GLCall(glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, size.x, size.y, 0,GL_RGB, GL_UNSIGNED_BYTE, 0));
-        unBind();
+        use(false);
         legit = true;
     }
     Texture::Texture(const Texture& other)
@@ -77,7 +77,7 @@ namespace gl {
             else {
                 tmpSurface = surface;
             }
-            bind();
+            use();
             GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter));
             GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter));
             GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER));
@@ -97,17 +97,22 @@ namespace gl {
     bool Texture::reload() { //TODO: Dynamic reload
         return true;
     }
-    
-    void Texture::bind() const {
-        static unsigned int bindID;
-        if (bindID == id) 
-            return;
+
+    void Texture::use(bool bind) const {
+        static unsigned int lastID;
         if (legit) {
-            glBindTexture(GL_TEXTURE_2D,id);
-            bindID = id;
+            if (bind) {
+                if (lastID != id) {
+                    lastID = id;
+                    GLCall(glBindTexture(GL_TEXTURE_2D,id));
+                }
+                return;
+            }
         }
             
-        
+        if (lastID != 0) {
+            lastID = 0;
+            GLCall(glBindTexture(GL_TEXTURE_2D,0));
+        }
     }
-    void Texture::unBind() const {if (legit) glBindTexture(GL_TEXTURE_2D, 0);}
 };

@@ -11,7 +11,7 @@ namespace gl {
 
             i.buffer.use();
             i.shader.use();
-            i.texture.bind();
+            i.texture.use();
 
             GLCall(glDrawElements(GL_TRIANGLES,i.ibo.size(),GL_UNSIGNED_INT, (void*)&(i.ibo[0])));
 

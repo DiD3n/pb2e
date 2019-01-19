@@ -53,9 +53,7 @@ namespace gl {
         constexpr bool isLegit() const {return legit;}
         constexpr Vector2ui getSize() const {return {w,h};}
 
-        void bind() const;
-        void unBind() const;
-
+        void use(bool = true) const;
 
         operator SubTexture() {
             return { *this, {0.f, 0.f, 1.f, 1.f} };
