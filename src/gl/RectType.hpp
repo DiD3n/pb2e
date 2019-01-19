@@ -11,16 +11,16 @@ namespace gl {
         T x, y, w, h;
 
         /* clockwise from the top left */
-        std::array<Vector2<T>,4> getVertices() const {
+        constexpr std::array<Vector2<T>,4> getVertices() const {
             return { Vector2<T>(x , y), Vector2<T>(x + w, y), Vector2<T>(x + w, y + h), Vector2<T>(x, y + h) }; 
         }
         operator std::array<Vector2<T>,4>() { return getVertices(); }
 
-        Rect(const T& a = 0)
+        constexpr Rect(const T& a = 0)
          : x(a) , y(a) , w(a) , h(a) {}
-        Rect(const T& x, const T& y,const T& w, const T& h)
+        constexpr Rect(const T& x, const T& y,const T& w, const T& h)
          : x(x) , y(y) , w(w) , h(h) {}
-        Rect(const Rect& other)
+        constexpr Rect(const Rect& other)
          : x(other.x) , y(other.y), w(other.w) , h(other.h) {}
 
         Rect operator +(const Rect& other) const { return Rect(x + other.x, y + other.y, h + other.h, w + other.w); }
@@ -66,45 +66,27 @@ namespace gl {
             return *this; 
         }
 
-        bool operator ==(const Rect& other) const {
-            if(x == other.x && y == other.y && w == other.w && h == other.h)
-                return true;
-            else
-                return false;
+        constexpr bool operator ==(const Rect& other) const {
+            return (x == other.x && y == other.y && w == other.w && h == other.h);
         }
-        bool operator !=(const Rect& other) const {
-            if(x != other.x && y != other.y && w != other.w && h != other.h)
-                return true;
-            else
-                return false;
+        constexpr bool operator !=(const Rect& other) const {
+            return (x != other.x && y != other.y && w != other.w && h != other.h);
         }
 
 
-        bool operator <(const Rect& other) const{
-            if(x < other.x && y < other.y && w < other.w && h < other.h)
-                return true;
-            else
-                return false;
+        constexpr bool operator <(const Rect& other) const{
+            return (x < other.x && y < other.y && w < other.w && h < other.h);
         }
-        bool operator >(const Rect& other) const {
-            if(x > other.x && y > other.y && w > other.w && h > other.h)
-                return true;
-            else
-                return false;
+        constexpr bool operator >(const Rect& other) const {
+            return (x > other.x && y > other.y && w > other.w && h > other.h);
         }
 
 
-        bool operator <=(const Rect& other) const {
-            if(x <= other.x && y <= other.y && w <= other.w && h <= other.h)
-                return true;
-            else
-                return false;
+        constexpr bool operator <=(const Rect& other) const {
+            return (x <= other.x && y <= other.y && w <= other.w && h <= other.h);
         }
-        bool operator >=(const Rect& other) const {
-            if(x >= other.x && y >= other.y && w >= other.w && h >= other.h)
-                return true;
-            else
-                return false;
+        constexpr bool operator >=(const Rect& other) const {
+            return (x >= other.x && y >= other.y && w >= other.w && h >= other.h);
         }
     };
 

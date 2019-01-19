@@ -49,45 +49,27 @@ namespace gl {
             return *this; 
         }
 
-        bool operator ==(const Vector2& v) const {
-            if(x == v.x && y == v.y)
-                return true;
-            else
-                return false;
+        constexpr bool operator ==(const Vector2& v) const {
+            return (x == v.x && y == v.y);
         }
-        bool operator !=(const Vector2& v) const {
-            if(x != v.x && y != v.y)
-                return true;
-            else
-                return false;
+        constexpr bool operator !=(const Vector2& v) const {
+            return (x != v.x && y != v.y);
         }
 
 
-        bool operator <(const Vector2& v) const{
-            if(x < v.x && y < v.y)
-                return true;
-            else
-                return false;
+        constexpr bool operator <(const Vector2& v) const{
+            return (x < v.x && y < v.y);
         }
-        bool operator >(const Vector2& v) const {
-            if(x > v.x && y > v.y)
-                return true;
-            else
-                return false;
+        constexpr bool operator >(const Vector2& v) const {
+            return (x > v.x && y > v.y);
         }
 
 
-        bool operator <=(const Vector2& v) const {
-            if(x <= v.x && y <= v.y)
-                return true;
-            else
-                return false;
+        constexpr bool operator <=(const Vector2& v) const {
+            return (x <= v.x && y <= v.y);
         }
-        bool operator >=(const Vector2& v) const {
-            if(x >= v.x && y >= v.y)
-                return true;
-            else
-                return false;
+        constexpr bool operator >=(const Vector2& v) const {
+            return (x >= v.x && y >= v.y);
         }
 
     };
