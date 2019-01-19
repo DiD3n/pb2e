@@ -42,7 +42,7 @@ namespace gl {
         Shader(const std::string& vertexSourcePath, const std::string& fragmentSourcePath);
         ~Shader() {glDeleteProgram(programID);}
 
-        bool operator ==(const Shader& other) const {
+        constexpr bool operator ==(const Shader& other) const {
             return (programID == other.programID);
         }
 
