@@ -46,7 +46,7 @@ namespace gl {
         if (this->compile(programID)) {
             legit = true;
         }  
-        this->bind();
+        use();
     }
 
 
@@ -102,7 +102,7 @@ namespace gl {
                 else
                    logError("gl::Shader::recompile() - can not find \"",i.name,"\" Uniform in the shader... did you change something?"); 
             }
-            this->bind();
+            use();
             logError("gl::Shader::recompile() - done!");
 
         } else {
@@ -113,7 +113,7 @@ namespace gl {
     }
 
     void Shader::updateShaderUniform(const UniformData& data) const {
-        this->bind();
+        use();
         switch (data.uniform.get().type) {
             /*   vec1   */
 
@@ -151,18 +151,22 @@ namespace gl {
         }
     }
 
-
-    void Shader::bind() const {
-        static unsigned int bindID;
-        if (bindID == programID)
-            return;
+    void Shader::use(bool bind) const {
+        static unsigned int lastID;
         if (legit) {
-            bindID = programID;
-            glUseProgram(programID);
-        } 
-    }
-    void Shader::unBind() const {
-        glUseProgram(0);
+            if (bind) {
+                if (lastID != programID) {
+                    lastID = programID;
+                    GLCall(glUseProgram(programID));
+                }
+                return;
+            }
+        }
+            
+        if (lastID != 0) {
+            lastID = 0;
+            GLCall(glUseProgram(0));
+        }
     }
 
     

@@ -50,8 +50,7 @@ namespace gl {
 
         constexpr bool isLegit() const {return legit;};
 
-        void bind() const;
-        void unBind() const;
+        void use(bool = true) const;
 
         void update() const; /* all */
         void update(const std::string& name) const; /* specific one */

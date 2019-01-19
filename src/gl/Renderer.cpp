@@ -10,7 +10,7 @@ namespace gl {
         for (BufferDB& i : buffers) {
 
             i.buffer.use();
-            i.shader.bind();
+            i.shader.use();
             i.texture.bind();
 
             GLCall(glDrawElements(GL_TRIANGLES,i.ibo.size(),GL_UNSIGNED_INT, (void*)&(i.ibo[0])));
