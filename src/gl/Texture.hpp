@@ -51,6 +51,8 @@ namespace gl {
         bool reload();
 
         constexpr bool isLegit() const {return legit;}
+
+        void setSize(const Vector2ui&); /* blank texture */
         constexpr Vector2ui getSize() const {return {w,h};}
 
         void use(bool = true) const;

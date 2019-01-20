@@ -22,7 +22,7 @@ namespace gl {
         constexpr const gl::Texture& getAsTexture() const {return *texture;}
 
         constexpr Vector2ui getSize() const {return size;}
-        void setSize(const Vector2f&);
+        void setSize(const Vector2ui&);
 
         void use(bool = true) const;
     };

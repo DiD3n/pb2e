@@ -57,7 +57,10 @@ namespace gl {
         }
     }
 
-
+    void FrameBuffer::setSize(const Vector2ui& size) {
+        this->size = size;
+        texture->setSize(size);
+    }
 
     void FrameBuffer::use(bool bind) const {
         static unsigned int lastID;

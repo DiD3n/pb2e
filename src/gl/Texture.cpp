@@ -88,7 +88,7 @@ namespace gl {
             this->h = surface->h;
             SDL_FreeSurface(tmpSurface);
             done = true;
-        }   
+        }
 
         SDL_FreeSurface(surface);
         return done;
@@ -96,6 +96,13 @@ namespace gl {
 
     bool Texture::reload() { //TODO: Dynamic reload
         return true;
+    }
+
+    void Texture::setSize(const Vector2ui& size) {
+        use();
+        GLCall(glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, size.x, size.y, 0,GL_RGB, GL_UNSIGNED_BYTE, 0));
+        w = size.x;
+        h = size.y;
     }
 
     void Texture::use(bool bind) const {
@@ -109,7 +116,7 @@ namespace gl {
                 return;
             }
         }
-            
+
         if (lastID != 0) {
             lastID = 0;
             GLCall(glBindTexture(GL_TEXTURE_2D,0));
