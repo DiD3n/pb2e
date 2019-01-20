@@ -27,6 +27,9 @@ namespace gl {
         void setSize(const Vector2ui&);
 
         void use(bool = true) const;
+
+        operator const gl::Texture()& {return *texture;}
+        operator const gl::SubTexture() {return {*texture};}
     };
 
 };
