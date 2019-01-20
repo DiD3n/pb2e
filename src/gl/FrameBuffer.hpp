@@ -19,6 +19,8 @@ namespace gl {
         FrameBuffer(const FrameBuffer&);
         ~FrameBuffer();
 
+        void clear();
+
         constexpr const gl::Texture& getAsTexture() const {return *texture;}
 
         constexpr Vector2ui getSize() const {return size;}

@@ -57,6 +57,11 @@ namespace gl {
         }
     }
 
+    void FrameBuffer::clear() {
+        use();
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
     void FrameBuffer::setSize(const Vector2ui& size) {
         this->size = size;
         texture->setSize(size);
