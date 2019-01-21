@@ -14,16 +14,16 @@ namespace gl {
 
     struct Uniform {
         void* data;
+        const unsigned int size;
         UniformType type;
-        bool pointable;
+        const bool pointable;
 
         template<typename T, typename ... T2>
         Uniform(const T& arg, const T2&... args);
         template<typename T>
-        Uniform(T& arg, bool pointable = false);
+        Uniform(bool pointable, T& arg);
+        Uniform(const Uniform&);
         ~Uniform();
-
-        Uniform& operator=(const Uniform& other);
 
     };
 

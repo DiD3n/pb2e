@@ -20,21 +20,21 @@ namespace gl {
     
     template<typename T, typename ... T2>
     Uniform::Uniform(const T& arg, const T2&... args)
-     : pointable(false){
+     : pointable(false) , size(sizeOfMulti(arg,args...)) {
             
-        int dataCount = sizeOfMulti(arg,args...)/sizeof(T);
+        int dataCount = size/sizeof(T);
              if (typeid(T) == typeid(float))        this->type = (UniformType)(10 * dataCount + 0);
         else if (typeid(T) == typeid(unsigned int)) this->type = (UniformType)(10 * dataCount + 1);
         else if (typeid(T) == typeid(int))          this->type = (UniformType)(10 * dataCount + 2);
 
-        data = (T*)malloc(sizeOfMulti(arg,args...));
+        data = (T*)malloc(size);
         
         pushDataArray((T*)data,arg,args...);
     }
 
     template<typename T>
-    Uniform::Uniform(T& arg, bool pointable)
-    : pointable(pointable) {
+    Uniform::Uniform(bool pointable, T& arg)
+    : pointable(pointable) , size(sizeof(size)) {
 
              if (typeid(T) == typeid(float))        this->type = vec1f; 
         else if (typeid(T) == typeid(int))          this->type = vec1i; 
