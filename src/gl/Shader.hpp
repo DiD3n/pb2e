@@ -14,17 +14,22 @@ namespace gl {
     struct UniformData {
         const std::string name;
         int id;
-        std::reference_wrapper<const Uniform> uniform;
-        UniformData& operator <<(const Uniform& uniform) {
-            this->uniform.operator=(std::ref(uniform));
-            return *this;
-        }
+        Uniform* uniform;
+        void replaceUniform(const Uniform& newUniform) {
+            if (uniform)
+                delete uniform;
+            uniform = new gl::Uniform(newUniform);
+        }   
         UniformData(const std::string& name, const int& id, const Uniform& uniform)
-         : uniform(std::ref(uniform)), name(name), id(id) {}
+         : uniform(new gl::Uniform(uniform)), name(name), id(id) {}
+        ~UniformData() {
+            if (uniform)
+                delete uniform;
+        }
     };
 
     class Shader {
-        private:
+    private:
         std::vector<UniformData> uniformList;
         bool legit;
         unsigned int programID;
@@ -34,7 +39,7 @@ namespace gl {
 
         void updateShaderUniform(const UniformData&) const;
 
-        public:
+    public:
 
 
         Shader(const Shader&);

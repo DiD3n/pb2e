@@ -114,40 +114,40 @@ namespace gl {
 
     void Shader::updateShaderUniform(const UniformData& data) const {
         use();
-        switch (data.uniform.get().type) {
+        switch (data.uniform->type) {
             /*   vec1   */
 
             case vec1f:   
-            GLCall(glUniform1f(data.id,*(float*)data.uniform.get().data));            break;
+            GLCall(glUniform1f(data.id,*(float*)data.uniform->data));            break;
             case vec1ui:  
-            GLCall(glUniform1ui(data.id,*(unsigned int*)data.uniform.get().data));    break;
+            GLCall(glUniform1ui(data.id,*(unsigned int*)data.uniform->data));    break;
             case vec1i:   
-            GLCall(glUniform1i(data.id,*(int*)data.uniform.get().data));              break;
+            GLCall(glUniform1i(data.id,*(int*)data.uniform->data));              break;
             /*   vec2   */
 
             case vec2f:   
-            GLCall(glUniform2f(data.id,((float*)data.uniform.get().data)[0],((float*)data.uniform.get().data)[1]));                   break;
+            GLCall(glUniform2f(data.id,((float*)data.uniform->data)[0],((float*)data.uniform->data)[1]));                   break;
             case vec2ui:  
-            GLCall(glUniform2ui(data.id,((unsigned int*)data.uniform.get().data)[0],((unsigned int*)data.uniform.get().data)[1]));    break;
+            GLCall(glUniform2ui(data.id,((unsigned int*)data.uniform->data)[0],((unsigned int*)data.uniform->data)[1]));    break;
             case vec2i:   
-            GLCall(glUniform2i(data.id,((int*)data.uniform.get().data)[0],((int*)data.uniform.get().data)[1]));                       break;
+            GLCall(glUniform2i(data.id,((int*)data.uniform->data)[0],((int*)data.uniform->data)[1]));                       break;
             /*   vec3   */
 
             case vec3f:
-            GLCall(glUniform3f(data.id,((float*)data.uniform.get().data)[0],((float*)data.uniform.get().data)[1],((float*)data.uniform.get().data)[2]));                          break;
+            GLCall(glUniform3f(data.id,((float*)data.uniform->data)[0],((float*)data.uniform->data)[1],((float*)data.uniform->data)[2]));                          break;
             case vec3ui:
-            GLCall(glUniform3ui(data.id,((unsigned int*)data.uniform.get().data)[0],((unsigned int*)data.uniform.get().data)[1],((unsigned int*)data.uniform.get().data)[2]));    break;
+            GLCall(glUniform3ui(data.id,((unsigned int*)data.uniform->data)[0],((unsigned int*)data.uniform->data)[1],((unsigned int*)data.uniform->data)[2]));    break;
             case vec3i:
-            GLCall(glUniform3i(data.id,((int*)data.uniform.get().data)[0],((int*)data.uniform.get().data)[1],((int*)data.uniform.get().data)[2]));                                break;
+            GLCall(glUniform3i(data.id,((int*)data.uniform->data)[0],((int*)data.uniform->data)[1],((int*)data.uniform->data)[2]));                                break;
 
             case mat2:
-            GLCall(glUniformMatrix2fv(data.id,1,GL_FALSE,(float*)&((glm::mat2*)data.uniform.get().data)[0][0]));   break;
+            GLCall(glUniformMatrix2fv(data.id,1,GL_FALSE,(float*)&((glm::mat2*)data.uniform->data)[0][0]));   break;
             case mat3:
-            GLCall(glUniformMatrix3fv(data.id,1,GL_FALSE,(float*)&((glm::mat3*)data.uniform.get().data)[0][0]));   break;
+            GLCall(glUniformMatrix3fv(data.id,1,GL_FALSE,(float*)&((glm::mat3*)data.uniform->data)[0][0]));   break;
             case mat4:
-            GLCall(glUniformMatrix4fv(data.id,1,GL_FALSE,(float*)&((glm::mat4*)data.uniform.get().data)[0][0]));   break;
+            GLCall(glUniformMatrix4fv(data.id,1,GL_FALSE,(float*)&((glm::mat4*)data.uniform->data)[0][0]));   break;
             default:
-            logError("gl::Shader::updateShaderUniform(uniformType:",data.uniform.get().type,") - Unknown type... skipping!");
+            logError("gl::Shader::updateShaderUniform(uniformType:",data.uniform->type,") - Unknown type... skipping!");
         }
     }
 
@@ -174,7 +174,7 @@ namespace gl {
 
     void Shader::update() const {
         for (const UniformData& i : uniformList) {
-            if (!i.uniform.get().pointable)
+            if (!i.uniform->pointable)
                 continue;
             else
                 updateShaderUniform(i);
@@ -185,7 +185,7 @@ namespace gl {
         for (const UniformData& i : uniformList) {
             if (i.name != name)
                 continue;
-            if (i.uniform.get().pointable) {
+            if (i.uniform->pointable) {
                 updateShaderUniform(i);
             } else {
                 logError("gl::Shader::update(",name,") - Uniform isn't pointable. Use update(name,data) instead of update(name)... skipping!");
@@ -198,7 +198,7 @@ namespace gl {
         for (UniformData& i : uniformList) {
             if (i.name != name)
                 continue;
-            i << uniform;
+            i.replaceUniform(uniform);
             return;
         }
         logError("gl::Shader::pushUniform() - can not find \"",name,"\" Uniform in the shader... skipping!");
@@ -215,12 +215,12 @@ namespace gl {
             for (UniformData& i : uniformList) {
                 if (i.name != name)
                     continue;
-                i << uniform;
+                i.replaceUniform(uniform);
                 return true;
             }
 
             //adding uniform to the list
-            this->uniformList.push_back({name,id,uniform});
+            this->uniformList.emplace_back(name,id,uniform);
         }
         else {
             logError("gl::Shader::pushUniform() - can not find \"",name,"\" Uniform in the shader... skipping!");
