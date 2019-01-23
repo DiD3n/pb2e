@@ -2,12 +2,6 @@
 
 namespace gl {
 
-    VertexBufferLayout::VertexBufferLayout(const VertexBufferLayout& other) {
-        this->list = other.list;
-        this->stride = other.stride;
-    }
-
-
     VertexBufferLayout& VertexBufferLayout::operator += (const LayoutElement& element) {
         list.push_back(element);
         stride += list.back().count * list.back().getTypeSize();

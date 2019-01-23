@@ -26,21 +26,29 @@ namespace gl {
                 default:               return 0;
             }    
         }
-        LayoutElement(const LayoutElement& other)
+        constexpr bool operator == (const LayoutElement& other) 
+        {return (type == other.type && count == other.count && normalized == other.normalized);}
+
+        constexpr LayoutElement(const LayoutElement& other)
          : count(other.count), type(other.type), normalized(other.normalized) {}
 
-        LayoutElement(unsigned int count = 0, unsigned int type = GL_FLOAT, bool normalized = false)
+        constexpr LayoutElement(unsigned int count = 0, unsigned int type = GL_FLOAT, bool normalized = false)
          : count(count), type(type), normalized(normalized) {}
     };
 
     class VertexBufferLayout { //v1.1
+    private:
+    
         std::vector<LayoutElement> list;
         unsigned int stride;
-        public:
 
-        VertexBufferLayout(const VertexBufferLayout&);
+    public:
+
+        VertexBufferLayout(const VertexBufferLayout& other)
+         : list(other.list) , stride(other.stride) {}
         VertexBufferLayout() : stride(0) {}
         ~VertexBufferLayout() {}
+
 
         VertexBufferLayout& operator += (const LayoutElement&);
         VertexBufferLayout& operator << (const LayoutElement&);
