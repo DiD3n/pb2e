@@ -29,6 +29,7 @@ namespace gl {
 
         constexpr bool isLegit() const {return legit;}
         constexpr unsigned int getDataCount() const {return dataSize/vbl.stride;}
+        constexpr unsigned int getStride() {return vbl.getStride();}
 
         VertexBuffer& clear();
 
