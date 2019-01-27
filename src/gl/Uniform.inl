@@ -26,6 +26,7 @@ namespace gl {
              if (typeid(T) == typeid(float))        this->type = (UniformType)(10 * dataCount + 0);
         else if (typeid(T) == typeid(unsigned int)) this->type = (UniformType)(10 * dataCount + 1);
         else if (typeid(T) == typeid(int))          this->type = (UniformType)(10 * dataCount + 2);
+		else if (typeid(T) == typeid(double))     	this->type = (UniformType)(10 * dataCount + 3);
 
         data = (T*)malloc(size);
         
@@ -39,6 +40,7 @@ namespace gl {
              if (typeid(T) == typeid(float))        this->type = vec1f; 
         else if (typeid(T) == typeid(int))          this->type = vec1i; 
         else if (typeid(T) == typeid(unsigned int)) this->type = vec1ui;
+		else if (typeid(T) == typeid(double)) 		this->type = vec1d;
         else if (typeid(T) == typeid(glm::mat2))    this->type = mat2;
         else if (typeid(T) == typeid(glm::mat3))    this->type = mat3;
         else if (typeid(T) == typeid(glm::mat4))    this->type = mat4;

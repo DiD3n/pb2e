@@ -123,6 +123,8 @@ namespace gl {
             GLCall(glUniform1ui(data.id,*(unsigned int*)data.uniform->data));    break;
             case vec1i:   
             GLCall(glUniform1i(data.id,*(int*)data.uniform->data));              break;
+			case vec1d:   
+            GLCall(glUniform1d(data.id,*(double*)data.uniform->data));              break;
             /*   vec2   */
 
             case vec2f:   
@@ -131,6 +133,8 @@ namespace gl {
             GLCall(glUniform2ui(data.id,((unsigned int*)data.uniform->data)[0],((unsigned int*)data.uniform->data)[1]));    break;
             case vec2i:   
             GLCall(glUniform2i(data.id,((int*)data.uniform->data)[0],((int*)data.uniform->data)[1]));                       break;
+			case vec2d:   
+            GLCall(glUniform2d(data.id,((double*)data.uniform->data)[0],((double*)data.uniform->data)[1]));                 break;
             /*   vec3   */
 
             case vec3f:
@@ -139,6 +143,8 @@ namespace gl {
             GLCall(glUniform3ui(data.id,((unsigned int*)data.uniform->data)[0],((unsigned int*)data.uniform->data)[1],((unsigned int*)data.uniform->data)[2]));    break;
             case vec3i:
             GLCall(glUniform3i(data.id,((int*)data.uniform->data)[0],((int*)data.uniform->data)[1],((int*)data.uniform->data)[2]));                                break;
+			case vec3d:
+            GLCall(glUniform3d(data.id,((double*)data.uniform->data)[0],((double*)data.uniform->data)[1],((double*)data.uniform->data)[2]));                       break;
 
             case mat2:
             GLCall(glUniformMatrix2fv(data.id,1,GL_FALSE,(float*)&((glm::mat2*)data.uniform->data)[0][0]));   break;
