@@ -3,9 +3,12 @@
 #include "../logger.hpp"
 #include "../include/glew.hpp"
 
+constexpr unsigned int sizeOfMulti() {
+    return 0;
+}
 
 template<typename T>
-unsigned int sizeOfMulti(const T& arg) {
+constexpr unsigned int sizeOfMulti(const T& arg) {
     return sizeof(arg);
 }
 
