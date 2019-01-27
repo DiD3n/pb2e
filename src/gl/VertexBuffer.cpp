@@ -5,9 +5,8 @@
 
 namespace gl {
 
-    VertexBuffer::VertexBuffer(const VertexBuffer& other) : vbl(other.vbl) {
-
-        VertexBuffer(other.vbl);
+    VertexBuffer::VertexBuffer(const VertexBuffer& other)
+	 : VertexBuffer(other.vbl) {
 
         /* coping the data */
 
@@ -22,6 +21,7 @@ namespace gl {
     VertexBuffer::VertexBuffer(const VertexBufferLayout& vbl) : vbl(vbl) {
 
         /* some gl stuff */
+
         GLCall(glGenVertexArrays(1, &VAOID));
         GLCall(glBindVertexArray(VAOID));
 
@@ -32,11 +32,16 @@ namespace gl {
         
         int offset = 0;
         for (int i = 0; i < this->vbl.list.size(); i++) {
+
             GLCall(glVertexAttribPointer(i , this->vbl.list[i].count , this->vbl.list[i].type , (int)this->vbl.list[i].normalized , this->vbl.stride , (const void*)offset));
             GLCall(glEnableVertexAttribArray(i));
+
             offset += this->vbl.list[i].count * this->vbl.list[i].getTypeSize();
+
         }
+
         data = nullptr;
+
     }
 
     VertexBuffer::~VertexBuffer() {
@@ -44,6 +49,7 @@ namespace gl {
         GLCall(glDeleteBuffers(1, &BufferID));
         GLCall(glDeleteBuffers(1, &VAOID));
         this->clear();
+		
     }
 
 
