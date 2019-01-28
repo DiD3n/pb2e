@@ -4,7 +4,6 @@
 #include "RectType.hpp"
 #include "VectorType.hpp"
 
-#define GL_TEXTURE_2D 0x0DE1
 #define GL_LINEAR 0x2601
 #define GL_NEAREST 0x2600
 

@@ -5,6 +5,8 @@
 #include "../logger.hpp"
 #include "../include/glm.hpp"
 
+#define GL_TEXTURE_2D 0x0DE1
+
 namespace gl {
 
     /* SubTexture */
