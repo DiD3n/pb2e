@@ -12,7 +12,7 @@
 
 
 namespace gl {
-    
+
     enum Shape : unsigned char {
         none      = 0,
         point     = 1,
@@ -27,29 +27,27 @@ namespace gl {
         const Texture& texture;
         const Shader& shader;
         std::vector<unsigned int> ibo;
+        bool basic;
         BufferDB(const BufferDB& other)
-         : buffer(other.buffer) , texture(other.texture) , shader(other.shader) {}
+         : buffer(other.buffer) , texture(other.texture) , shader(other.shader) , basic(other.basic) {}
         BufferDB(const VertexBufferLayout& layout, const Texture& texture, const Shader& shader)
-         : buffer(layout) , texture(texture) , shader(shader) {}
+         : buffer(layout) , texture(texture) , shader(shader) , basic(false) {}
     };
 
-    
+    class Renderer {
+    private:
+        std::vector<BufferDB> buffers;
 
-    class Renderer { //TODO: rewrite
-        std::list<BufferDB> buffers;
-        public:
+    public:
+
+        template<ubyte type, typename... T>
+        void draw(const gl::Shader& shader, const gl::SubTexture& texture, const std::array<Vector2f,type>& vert, const T&... args);
 
         void pushCustomLayout(const VertexBufferLayout& layout, const SubTexture& texture, const Shader& shader);
 
         void finalRender();
 
         void clear();
-        
-        template<ubyte type, typename T, typename... T2 >
-        void draw(const gl::Shader& shader, const gl::SubTexture& texture, std::array<Vector2f,type> vector, const T& arg, const T2&... args);
-
-        template<ubyte type>
-        void draw(const gl::Shader& shader, const gl::SubTexture& texture, std::array<Vector2f,type> vector);
 
         //void renderCustom();
 
