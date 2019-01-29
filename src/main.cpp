@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
                 if( SDL_GL_SetSwapInterval( 1 ) < 0 ) {
 					logError("Vsync problem!");
 				}
-
+                logInfo("Init - done!");
                 gl::Renderer renderer;
                 gl::Texture texture("res/weed.png", gl::nearest);
                 gl::Shader shader("res/basicVertex.glsl","res/basicFragment.glsl");
@@ -90,28 +90,18 @@ int main(int argc, char *argv[]) {
                     for (int i = 0; i < 4; i++) {
                         myBuffer.push(rect.getVertices()[i], st.uv.getVertices()[i],(uchar)128,(uchar)255,(uchar)0);
                     }
+                   
+                //gl::VertexBuffer myNewBuffer(myBuffer);
                 
-                
-                gl::VertexBuffer myNewBuffer(myBuffer);
-                /**/
-                    
-                
-                
-                
-
                 gl::Rectf weedSize(-400.f,-300.f,800.f,600.f);      
                 gl::Rectf rectt(-100.f,-100.f,300.f,300.f);
  
                 while(unsigned int err = glGetError()) {
                     std::cout << err << "\n";
                 }
+
                 unsigned int frame = 0;
                 bool end = false;
-                unsigned int memo;
-
-                
-
-                auto time = std::chrono::high_resolution_clock::now();
                 while (!end) {
                     
                     SDL_Event ev;
@@ -152,28 +142,26 @@ int main(int argc, char *argv[]) {
                     glClear(GL_COLOR_BUFFER_BIT);
 
                     renderer.clear();
+                    frameBuffer.clear();
+                    {   //render to frameBuffer
 
+                        renderer.draw<gl::rectangle>(shader,texture,weedSize,(uchar)32,(uchar)255,(uchar)255);
+                        renderer.draw<gl::rectangle>(shader,texture,rectt,(uchar)255,(uchar)255,(uchar)0);
 
+                        std::array<gl::Vector2f,3> arr={gl::Vector2f(-500,500),gl::Vector2f(-500,-500),gl::Vector2f(500,-500)};
+                        renderer.draw<3>(shader,texture,arr,1.f,1.f);
 
-                    frameBuffer.use();
-                    glClear(GL_COLOR_BUFFER_BIT);
-                    renderer.draw<gl::rectangle>(shader,texture,weedSize,(uchar)255,(uchar)255,(uchar)255);
-                    renderer.draw<gl::rectangle>(shader,texture,rectt,(uchar)128,(uchar)255,(uchar)128);
+                    }
                     renderer.finalRender();
                     frameBuffer.use(false);
                     renderer.clear();
-                    renderer.draw<gl::rectangle>(shader,texture,weedSize,(uchar)128,(uchar)128,(uchar)255);
-                    renderer.draw<gl::rectangle>(shader,frameBuffer.getAsTexture(),rectt,(uchar)255,(uchar)255,(uchar)255);
+                    {   //render to screen
+
+                        renderer.draw<gl::rectangle>(shader,texture,weedSize,(uchar)255,(uchar)32,(uchar)255);
+                        renderer.draw<gl::rectangle>(shader,frameBuffer.getAsTexture(),rectt,(uchar)255,(uchar)255,(uchar)255);
+
+                    }
                     renderer.finalRender();
-                    //frameBuffer.use(false);
-                    //
-                    
-                    
-                    //renderer.draw<gl::rectangle>(shader,frameBuffer.getAsTexture(),rectt);
-                    //renderer.finalRender();
-                    
-                    //std::cout << (std::chrono::high_resolution_clock::now() - time).count()/100000 << '\n';
-                    time = std::chrono::high_resolution_clock::now();
 
                     SDL_GL_SwapWindow( window );
                     frame++;
