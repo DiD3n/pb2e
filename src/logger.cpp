@@ -1,6 +1,11 @@
 #include "logger.hpp"
 
+
 #include <string>
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 
 void showLogo(void) {
 	//why not?
@@ -19,6 +24,7 @@ void showLogo(void) {
    88                                             
 )");
 }
+
 std::string getErrorMsg(unsigned int code) {
     switch (code) {
         case GL_INVALID_FRAMEBUFFER_OPERATION: return "GL_INVALID_FRAMEBUFFER_OPERATION";
@@ -28,4 +34,15 @@ std::string getErrorMsg(unsigned int code) {
         case GL_OUT_OF_MEMORY:                 return "GL_OUT_OF_MEMORY";
         case GL_NO_ERROR: default:             return "";
     }
+}
+
+void setConsoleColor(unsigned char a) {
+
+#ifdef WIN32  
+    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(handle, a);
+#endif
+
+    //linux?
+
 }
