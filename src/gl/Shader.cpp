@@ -91,24 +91,45 @@ namespace gl {
     void Shader::recompile() {
         GLCall(unsigned int program = glCreateProgram());
         if (compile(program)) {
+
             //replacing program
-            GLCall(glDeleteProgram(programID));
+            unsigned int oldProgram = programID;
             programID = program;
             
+            use();
+
+            bool legit = true;
             for (UniformData& i : uniformList) {
                 GLCall(int id = glGetUniformLocation(this->programID,i.name.c_str()));
                 if (id > -1)
                     i.id = id;
-                else
-                   logError("gl::Shader::recompile() - can not find \"",i.name,"\" Uniform in the shader... did you change something?"); 
+                else {
+                    legit = false;
+                    logError("gl::Shader::recompile() - can not find \"",i.name,"\" Uniform in the shader... did you change something?"); 
+                }
+                   
             }
-            use();
-            logError("gl::Shader::recompile() - done!");
 
-        } else {
-            GLCall(glDeleteProgram(program)); //in case of a failed compilation
-            logError("gl::Shader::recompile() - failed!");
+            if (legit) {
+
+                //Restoring the last valid uniforms
+                for (const UniformData& i : uniformList)
+                    updateShaderUniform(i);
+
+                GLCall(glDeleteProgram(programID));
+
+                logInfo("gl::Shader::recompile() - done!");
+
+                return;
+
+            }
+            programID = oldProgram;
+                
         }
+        
+        
+        GLCall(glDeleteProgram(program)); //in case of a failed compilation
+        logError("gl::Shader::recompile() - failed!");
             
     }
 
@@ -196,7 +217,7 @@ namespace gl {
             } else {
                 logError("gl::Shader::update(",name,") - Uniform isn't pointable. Use update(name,data) instead of update(name)... skipping!");
             }
-            return;
+            return; 
         }
     }
 
