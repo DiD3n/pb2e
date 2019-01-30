@@ -53,11 +53,17 @@ namespace gl {
     }
 
 
+    void VertexBuffer::reserve(unsigned int size) {
+        maxSize += size*vbl.stride;
+        data = (void*)realloc((void*)data, maxSize);
+    }
+
     VertexBuffer& VertexBuffer::clear() {
 
         free(data);
         data = nullptr;
         dataSize = 0;
+        maxSize = 0;
 
         return *this;
     }

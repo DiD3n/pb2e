@@ -11,7 +11,7 @@ namespace gl {
     private:
 
         void* data = nullptr;
-        unsigned int dataSize = 0;
+        unsigned int dataSize = 0, maxSize = 0;
         
         unsigned int BufferID = 0, VAOID = 0;
 
@@ -26,6 +26,7 @@ namespace gl {
 
         template<typename T, typename ... T2> 
         void push(const T& arg,const T2&... args);
+        void reserve(unsigned int size);
 
         constexpr bool isLegit() const {return legit;}
         constexpr unsigned int getDataCount() const {return dataSize/vbl.stride;}

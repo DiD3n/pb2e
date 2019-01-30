@@ -37,9 +37,12 @@ namespace gl {
 
         if (vbl.stride == sizeOfMulti(arg,args...)) {
 
-            data = (void*)realloc((void*)data, dataSize + vbl.stride);
-            pushData((char*)data + dataSize, arg, args...);
+            if (maxSize - dataSize < vbl.stride ) {
+                data = (void*)realloc((void*)data, dataSize + vbl.stride);
+                maxSize  += vbl.stride;
+            } 
 
+            pushData((char*)data + dataSize, arg, args...);
             dataSize += vbl.stride;
 
         }

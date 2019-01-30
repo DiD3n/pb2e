@@ -35,6 +35,8 @@ namespace gl {
 
                         /* filling Buffer */
 
+                        buffers[i].buffer.reserve(type);
+
                         for (char j = 0; j < type; j++) 
                             buffers[i].buffer.push(vert[j],texture.uv.getVertices()[j],args...);
 
@@ -44,6 +46,8 @@ namespace gl {
                     if (buffers[i].basic) {
 
                         /* filling Buffer */
+
+                        buffers[i].buffer.reserve(type);
 
                         for (char j = 0; j < type; j++) 
                             buffers[i].buffer.push(vert[j],texture.uv.getVertices()[j]);
