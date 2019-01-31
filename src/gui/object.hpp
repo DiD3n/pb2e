@@ -2,22 +2,34 @@
 
 #include <string>
 #include <vector>
-#include "../gl/VectorType.hpp"
+
 #include "../include/sdl2.hpp"
+
+#include "../gl/VectorType.hpp"
+
+#include "style.hpp"
+
 
 namespace gui {
 
-	class Object { //0.3v
+	class Object { //0.4v
 	private:
+		std::string name;
 		gl::Vector2ui size;
 		gl::Vector2f pos;
-		bool pressed,hovered,clicked,active;
-		//std::vector 
+		bool pressed, hovered, clicked, active;
+
+		const Style& style;
 
 	public:
 
-		Object();
-		Object(const Object& other);
+		std::vector<Object> children;
+
+		Object(const std::string& name, const Style& style)
+		 : name(name) , size(256,255) , pos(0,0) , style(style) {}
+		Object(const Object& other)
+		 : name(name) , size(size) , pos(pos) 
+		 , style(style) , children(children) {};
 		~Object();
 
 		virtual void draw();
@@ -36,7 +48,8 @@ namespace gui {
 		Object& setSize(const unsigned int& x, const unsigned int& y);
 		gl::Vector2ui getSize() const;
 
-		Object& setSize();		
+		Object& setStyle(const Style&);
+		const gui::Style& getStyle() const;
 
 		/* events */
 
