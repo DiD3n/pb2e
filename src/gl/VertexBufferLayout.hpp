@@ -49,6 +49,8 @@ namespace gl {
         VertexBufferLayout() : stride(0) {}
         ~VertexBufferLayout() {}
 
+        bool operator == (const VertexBufferLayout& other) const
+         { return (this->getScheme() == other.getScheme()); }
 
         VertexBufferLayout& operator += (const LayoutElement&);
         VertexBufferLayout& operator << (const LayoutElement&);
