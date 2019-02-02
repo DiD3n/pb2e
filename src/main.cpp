@@ -73,8 +73,9 @@ int main(int argc, char *argv[]) {
 
                     gl::VertexBufferLayout layout;
                     layout << gl::LayoutElement(2) << gl::LayoutElement(2) << gl::LayoutElement(3,GL_UNSIGNED_BYTE,true);
-                    renderer.pushCustomLayout(layout,texture,shader);
-                    renderer.pushCustomLayout(layout,frameBuffer.getAsTexture(),shader);
+                    renderer.pushCustomBuffer(layout,frameBuffer.getAsTexture(),shader);
+                    renderer.pushCustomBuffer(layout,texture,shader);
+                    
                 }
                 gl::VertexBufferLayout layout;
                 layout << gl::LayoutElement(2) << gl::LayoutElement(2) << gl::LayoutElement(3,GL_UNSIGNED_BYTE,true);
@@ -91,10 +92,8 @@ int main(int argc, char *argv[]) {
                         myBuffer.push(rect.getVertices()[i], st.uv.getVertices()[i],(uchar)128,(uchar)255,(uchar)0);
                     }
                    
-                //gl::VertexBuffer myNewBuffer(myBuffer);
-                
                 gl::Rectf weedSize(-400.f,-300.f,800.f,600.f);      
-                gl::Rectf rectt(-100.f,-100.f,300.f,300.f);
+                gl::Rectf rectt(-50.f,-50.f,300.f,300.f);
  
                 while(unsigned int err = glGetError()) {
                     std::cout << err << "\n";
@@ -157,8 +156,8 @@ int main(int argc, char *argv[]) {
                     renderer.clear();
                     {   //render to screen
 
-                        renderer.draw<gl::rectangle>(shader,texture,weedSize,(uchar)255,(uchar)32,(uchar)255);
                         renderer.draw<gl::rectangle>(shader,frameBuffer.getAsTexture(),rectt,(uchar)255,(uchar)255,(uchar)255);
+                        renderer.draw<gl::rectangle>(shader,texture,weedSize,(uchar)255,(uchar)32,(uchar)255);
 
                     }
                     renderer.finalRender();

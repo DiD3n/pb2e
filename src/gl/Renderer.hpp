@@ -43,9 +43,11 @@ namespace gl {
         template<ubyte type, typename... T>
         void draw(const gl::Shader& shader, const gl::SubTexture& texture, const std::array<Vector2f,type>& vert, const T&... args);
 
-        void pushCustomLayout(const VertexBufferLayout& layout, const SubTexture& texture, const Shader& shader);
+        void pushCustomBuffer(const VertexBufferLayout& layout, const SubTexture& texture, const Shader& shader);
 
         void finalRender();
+
+        bool checkBufferExists(const VertexBufferLayout& layout, const SubTexture& texture, const Shader& shader);
 
         void clear();
 

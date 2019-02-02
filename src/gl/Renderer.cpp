@@ -2,7 +2,7 @@
 
 namespace gl {
 
-    void Renderer::pushCustomLayout(const VertexBufferLayout& layout, const SubTexture& texture, const Shader& shader) {
+    void Renderer::pushCustomBuffer(const VertexBufferLayout& layout, const SubTexture& texture, const Shader& shader) {
         buffers.emplace_back(layout, texture.texture, shader);
     }
 
@@ -25,6 +25,14 @@ namespace gl {
             i.buffer.clear();
             
         }
+    }
+
+    bool Renderer::checkBufferExists(const VertexBufferLayout& layout, const SubTexture& texture, const Shader& shader) {
+        for (BufferDB& i : buffers) {
+            if (i.buffer.vbl == layout && i.texture == texture.texture && i.shader == shader)
+                return true;
+        }
+        return false;
     }
 
 };
