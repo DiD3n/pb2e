@@ -11,6 +11,8 @@ namespace gl {
 
     void Renderer::finalRender() {
         for (BufferDB& i : buffers) {
+            if (i.ibo.size() == 0)
+                continue;
 
             i.buffer.use();
             i.shader->use();
@@ -25,6 +27,8 @@ namespace gl {
 
     void Renderer::clear() {
         for (BufferDB& i : buffers) {
+            if (i.ibo.size() == 0)
+                continue;
 
             i.ibo.clear();
             i.buffer.clear();
