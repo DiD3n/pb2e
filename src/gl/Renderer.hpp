@@ -24,14 +24,16 @@ namespace gl {
 
     struct BufferDB {
         VertexBuffer buffer;
-        const Texture& texture;
-        const Shader& shader;
+        const Texture* const texture;
+        const Shader* const shader;
         std::vector<unsigned int> ibo;
         bool basic;
         BufferDB(const BufferDB& other)
          : buffer(other.buffer) , texture(other.texture) , shader(other.shader) , basic(other.basic) {}
         BufferDB(const VertexBufferLayout& layout, const Texture& texture, const Shader& shader)
-         : buffer(layout) , texture(texture) , shader(shader) , basic(false) {}
+         : buffer(layout) , texture(&texture) , shader(&shader) , basic(false) {}
+         BufferDB(const VertexBufferLayout& layout, const Shader& shader)
+         : buffer(layout) , texture(nullptr) , shader(&shader) , basic(false) {}
     };
 
     class Renderer {
@@ -39,19 +41,25 @@ namespace gl {
         std::vector<BufferDB> buffers;
 
     public:
+        /* <3 */
 
         template<ubyte type, typename... T>
         void draw(const gl::Shader& shader, const gl::SubTexture& texture, const std::array<Vector2f,type>& vert, const T&... args);
 
-        void pushCustomBuffer(const VertexBufferLayout& layout, const SubTexture& texture, const Shader& shader);
+        template<ubyte type, typename... T> //without texture
+        void draw(const gl::Shader& shader, const std::array<Vector2f,type>& vert, const T&... args);
 
         void finalRender();
 
-        bool checkBufferExists(const VertexBufferLayout& layout, const SubTexture& texture, const Shader& shader);
+        /* Buffer's stuff */
+
+        void pushCustomBuffer(const VertexBufferLayout&, const SubTexture&, const Shader&);
+        void pushCustomBuffer(const VertexBufferLayout&, const Shader&);
+
+        bool checkBufferExists(const VertexBufferLayout&, const SubTexture&, const Shader&);
+        bool checkBufferExists(const VertexBufferLayout&, const Shader&);
 
         void clear();
-
-        //void renderCustom();
 
     };
 
