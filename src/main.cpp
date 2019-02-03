@@ -59,6 +59,7 @@ int main(int argc, char *argv[]) {
                 gl::Renderer renderer;
                 gl::Texture texture("res/weed.png", gl::nearest);
                 gl::Shader shader("res/basicVertex.glsl","res/basicFragment.glsl");
+                gl::Shader shader2("res/basicUIVert.glsl","res/basicUIFrag.glsl");
                 gl::FrameBuffer frameBuffer({800,600});
 
                 glEnable(GL_BLEND);
@@ -70,11 +71,17 @@ int main(int argc, char *argv[]) {
                     gl::Uniform un(true,mvp);
                     shader.pushUniform("MVP",un);
                     shader.update();
+                    shader2.pushUniform("MVP",un);
+                    shader2.update();
 
                     gl::VertexBufferLayout layout;
                     layout << gl::LayoutElement(2) << gl::LayoutElement(2) << gl::LayoutElement(3,GL_UNSIGNED_BYTE,true);
                     renderer.pushCustomBuffer(layout,frameBuffer.getAsTexture(),shader);
                     renderer.pushCustomBuffer(layout,texture,shader);
+
+                    gl::VertexBufferLayout layout2;
+                    layout2.push({2}).push(4,GL_UNSIGNED_BYTE,true);
+                    renderer.pushCustomBuffer(layout2,shader2);
                     
                 }
                 gl::VertexBufferLayout layout;
@@ -117,6 +124,7 @@ int main(int argc, char *argv[]) {
                                     glViewport(0, 0, w, h);
                                     mvp = glm::ortho(-(float)w/2,(float)w/2,-(float)h/2,(float)h/2,-1.0f,1.0f);
                                     shader.update("MVP");
+                                    shader2.update("MVP");
                                     break;
                                 }
                             break;
@@ -157,7 +165,7 @@ int main(int argc, char *argv[]) {
                     {   //render to screen
 
                         renderer.draw<gl::rectangle>(shader,frameBuffer.getAsTexture(),rectt,(uchar)255,(uchar)255,(uchar)255);
-                        renderer.draw<gl::rectangle>(shader,texture,weedSize,(uchar)255,(uchar)32,(uchar)255);
+                        renderer.draw<gl::rectangle>(shader2,weedSize,(uchar)255,(uchar)32,(uchar)255,(ubyte)128);
 
                     }
                     renderer.finalRender();
