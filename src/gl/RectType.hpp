@@ -10,6 +10,20 @@ namespace gl {
         public:
         T x, y, w, h;
 
+        constexpr gl::Vector2<T>& xy() {
+            return *(gl::Vector2<T>*)&x;
+        }
+        constexpr gl::Vector2<T>& wh() {
+            return *(gl::Vector2<T>*)&w;
+        }
+
+        constexpr const gl::Vector2<T>& xy() const{
+            return *(gl::Vector2<T>*)&x;
+        }
+        constexpr const gl::Vector2<T>& wh() const{
+            return *(gl::Vector2<T>*)&w;
+        }
+
         /* clockwise from the top left */
         constexpr std::array<Vector2<T>,4> getVertices() const {
             return { Vector2<T>(x , y), Vector2<T>(x + w, y), Vector2<T>(x + w, y + h), Vector2<T>(x, y + h) }; 
