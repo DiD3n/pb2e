@@ -248,6 +248,7 @@ namespace gl {
 
             //adding uniform to the list
             this->uniformList.emplace_back(name,id,uniform);
+            this->update(name);
         }
         else {
             logError("gl::Shader::pushUniform() - can not find \"",name,"\" Uniform in the shader... skipping!");
