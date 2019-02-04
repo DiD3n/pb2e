@@ -10,12 +10,14 @@ namespace gl {
 
         /* coping the data */
 
-        if (other.dataSize == 0)
+        if (other.maxSize == 0)
             return;
 
-        data = (void*)realloc((void*)data, other.dataSize);
-        memcpy(data, other.data, other.dataSize);
-        
+        data = (void*)realloc((void*)data, other.maxSize);
+        memcpy(data, other.data, other.maxSize);
+
+        maxSize = other.maxSize;
+        dataSize = other.dataSize;
     }
 
     VertexBuffer::VertexBuffer(const VertexBufferLayout& vbl) : vbl(vbl) {
