@@ -1,4 +1,5 @@
 #pragma once
+
 /* 
 SDL 2.0 and newer are available under the zlib license :
 
@@ -18,6 +19,60 @@ freely, subject to the following restrictions:
    misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 */
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+//#include <SDL2/SDL_mix.h>
+
+
+inline const char* initSDL() //returns "" when success
+{
+    /*   SDL2  */
+
+    if ( SDL_Init(SDL_INIT_EVENTS) != 0 ) 
+    {
+        return SDL_GetError();
+    }
+
+    /*   IMG   */
+
+    int img_flags = IMG_INIT_WEBP| IMG_INIT_JPG | IMG_INIT_PNG;
+    if ( !( IMG_Init( img_flags ) & img_flags ) ) 
+    {
+        return SDL_GetError();
+    }
+
+    /*   TTF   */
+
+    if( TTF_Init() != 0 ) 
+    {
+        return SDL_GetError();
+    }
+
+    /*   MIX   
+
+    int mix_flags = MIX_INIT_OGG | MIX_INIT_MP3;
+    if( !( MIX_Init( mix_flags ) & mix_flags ) ) 
+    {
+        return SDL_GetError();
+    }
+
+    */
+
+    return "";
+
+}
+
+inline void quitSDL() 
+{
+
+    SDL_Quit();
+
+    IMG_Quit();
+
+    TTF_Quit();
+
+    //Mix_Quit();
+
+}
