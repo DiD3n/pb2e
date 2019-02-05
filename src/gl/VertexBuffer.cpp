@@ -49,7 +49,7 @@ namespace gl {
     VertexBuffer::~VertexBuffer() {
         
         GLCall(glDeleteBuffers(1, &BufferID));
-        GLCall(glDeleteBuffers(1, &VAOID));
+        GLCall(glDeleteVertexArrays(1, &VAOID));
         this->clear();
 		
     }
