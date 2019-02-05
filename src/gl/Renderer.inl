@@ -12,51 +12,48 @@ namespace gl {
 
                 if (texture.texture == *(buffers[i].texture)) { //checking texture
 
-                    /* filling IBO */
-                    if (type == gl::rectangle) {
-
-                        buffers[i].ibo.reserve(6);
-                        unsigned char iboTemplate[6] = { 0,1,2,0,3,2 };
-                        for (int j = 0; j < 6; j++)
-                            buffers[i].ibo.emplace_back(buffers[i].buffer.getDataCount()+iboTemplate[j]);
-
-                    } 
-                    else {
-
-                        buffers[i].ibo.reserve(type);
-                        int size = buffers[i].buffer.getDataCount(); 
-                        for (int j = size; j < size+type; j++)
-                            buffers[i].ibo.emplace_back(j);
-
-                    }
-                       
+                    /* filling Buffer */
 
                     if (sizeof(float) * 4 + sizeOfMulti(args...) == buffers[i].buffer.getStride()) {
-
-                        /* filling Buffer */
 
                         buffers[i].buffer.reserve(type);
 
                         for (char j = 0; j < type; j++) 
                             buffers[i].buffer.push(vert[j],texture.uv.getVertices()[j],args...);
 
-                        return;
-
                     } else 
                     if (buffers[i].basic) {
-
-                        /* filling Buffer */
 
                         buffers[i].buffer.reserve(type);
 
                         for (char j = 0; j < type; j++) 
                             buffers[i].buffer.push(vert[j],texture.uv.getVertices()[j]);
 
-                        return;
+                    } 
+                    else
+                        continue;
+
+
+                    /* filling IBO */
+
+                    if (type == gl::rectangle) {
+
+                        buffers[i].ibo.reserve(6);
+                        unsigned char iboTemplate[6] = { 0,1,2,0,3,2 };
+                        for (int j = 0; j < 6; j++)
+                            buffers[i].ibo.emplace_back((buffers[i].buffer.getDataCount()-type)+iboTemplate[j]);
+
+                    } 
+                    else {
+
+                        buffers[i].ibo.reserve(type);
+                        int size = buffers[i].buffer.getDataCount() - type; 
+                        for (int j = size; j < size+type; j++)
+                            buffers[i].ibo.emplace_back(j);
 
                     }
 
-                    continue;
+                    return;
 
                 }
 
@@ -77,7 +74,7 @@ namespace gl {
 		buffers.emplace_back(layout,texture.texture,shader);
         buffers.back().basic = true;
 
-        draw<type>(shader,texture,vert);
+        draw<type>(shader,texture,vert,args...);
 
 		return;
     }
@@ -88,55 +85,52 @@ namespace gl {
         //looking for matching buffer
         for (int i = 0; i < buffers.size(); i++) {
 
-            if (nullptr == buffers[i].texture) { //checking shader
+            if (nullptr == buffers[i].texture) { //checking buffer 
 
-                if (shader == *(buffers[i].shader)) { //checking texture
-
-                    /* filling IBO */
-                    if (type == gl::rectangle) {
-
-                        buffers[i].ibo.reserve(6);
-                        unsigned char iboTemplate[6] = { 0,1,2,0,3,2 };
-                        for (int j = 0; j < 6; j++)
-                            buffers[i].ibo.emplace_back(buffers[i].buffer.getDataCount()+iboTemplate[j]);
-
-                    } 
-                    else {
-
-                        buffers[i].ibo.reserve(type);
-                        int size = buffers[i].buffer.getDataCount(); 
-                        for (int j = size; j < size+type; j++)
-                            buffers[i].ibo.emplace_back(j);
-
-                    }
+                if (shader == *(buffers[i].shader)) { //checking shader
                        
+                    /* filling Buffer */
 
                     if (sizeof(float) * 2 + sizeOfMulti(args...) == buffers[i].buffer.getStride()) {
-
-                        /* filling Buffer */
 
                         buffers[i].buffer.reserve(type);
 
                         for (char j = 0; j < type; j++) 
                             buffers[i].buffer.push(vert[j],args...);
 
-                        return;
-
                     } else 
                     if (buffers[i].basic) {
-
-                        /* filling Buffer */
 
                         buffers[i].buffer.reserve(type);
 
                         for (char j = 0; j < type; j++) 
                             buffers[i].buffer.push(vert[j]);
 
-                        return;
+                    }
+                    else
+                        continue;
+
+
+                    /* filling IBO */
+
+                    if (type == gl::rectangle) {
+
+                        buffers[i].ibo.reserve(6);
+                        unsigned char iboTemplate[6] = { 0,1,2,0,3,2 };
+                        for (int j = 0; j < 6; j++)
+                            buffers[i].ibo.emplace_back(buffers[i].buffer.getDataCount()-type+iboTemplate[j]);
+
+                    } 
+                    else {
+
+                        buffers[i].ibo.reserve(type);
+                        int size = buffers[i].buffer.getDataCount()-type; 
+                        for (int j = size; j < size+type; j++)
+                            buffers[i].ibo.emplace_back(j);
 
                     }
 
-                    continue;
+                    return;
 
                 }
 

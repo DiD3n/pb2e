@@ -9,10 +9,10 @@ namespace gui {
 		std::string name = "Flat Blue";
 
 		//colors
-		gl::Color primary    = { (ubyte) 76 , 209, 55 },
-				  secondary  = { (ubyte) 68 , 189, 50 },
-				  background = { (ubyte) 47 , 54 , 64 },
-				  textColor  = { (ubyte) 245, 246, 250};
+		gl::Color primary    = { (ubyte) 76 , 209, 55 , 255},
+				  secondary  = { (ubyte) 68 , 189, 50 , 255},
+				  background = { (ubyte) 47 , 54 , 64 , 255},
+				  textColor  = { (ubyte) 245, 246, 250, 255};
 
 		//shader
 		gl::Shader shader;

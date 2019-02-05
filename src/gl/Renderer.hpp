@@ -29,7 +29,7 @@ namespace gl {
         std::vector<unsigned int> ibo;
         bool basic;
         BufferDB(const BufferDB& other)
-         : buffer(other.buffer) , texture(other.texture) , shader(other.shader) , basic(other.basic) {}
+         : buffer(other.buffer) , texture(other.texture) , shader(other.shader) , basic(other.basic) , ibo(other.ibo) {}
         BufferDB(const VertexBufferLayout& layout, const Texture& texture, const Shader& shader)
          : buffer(layout) , texture(&texture) , shader(&shader) , basic(false) {}
          BufferDB(const VertexBufferLayout& layout, const Shader& shader)
