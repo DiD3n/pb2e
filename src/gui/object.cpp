@@ -3,25 +3,31 @@
 
 namespace gui {
 
+	void Object::draw(gl::Renderer& renderer) {
+
+		renderer.draw<gl::rectangle>(style->shader,rect,style.get()->background);
+		
+	}
+
 	/* properties */
 
 	Object& Object::setPosition(const gl::Vector2f& pos) {
-		this->pos = pos;
+		this->rect.xy() = pos;
 		return *this;
 	}
 	Object& Object::setPosition(const float& x, const float& y) {
-		this->pos.x = x;
-		this->pos.y = y;
+		this->rect.x = x;
+		this->rect.y = y;
 		return *this;
 	}
 
-	Object& Object::setSize(const gl::Vector2ui& size) {
-		this->size = size;
+	Object& Object::setSize(const gl::Vector2f& size) {
+		this->rect.wh() = size;
 		return *this;
 	}
 	Object& Object::setSize(const unsigned int& x, const unsigned int& y) {
-		this->size.x = x;
-		this->size.y = y;
+		this->rect.w = x;
+		this->rect.h = y;
 		return *this;
 	}
 
