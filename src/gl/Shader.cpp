@@ -116,7 +116,7 @@ namespace gl {
                 for (const UniformData& i : uniformList)
                     updateShaderUniform(i);
 
-                GLCall(glDeleteProgram(programID));
+                GLCall(glDeleteProgram(oldProgram));
 
                 logInfo("gl::Shader::recompile() - done!");
 
