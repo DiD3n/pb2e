@@ -28,6 +28,8 @@ namespace gl {
         }
     };
 
+    class VertexBufferLayout;
+
     class Shader {
     private:
         std::vector<UniformData> uniformList;
@@ -62,5 +64,7 @@ namespace gl {
         void update(const std::string& name, const Uniform&);
 
         bool pushUniform(const std::string& name, const Uniform&);
+
+        friend VertexBufferLayout;
     };
 };

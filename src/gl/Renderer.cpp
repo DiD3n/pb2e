@@ -16,6 +16,7 @@ namespace gl {
 
             i.buffer.use();
             i.shader->use();
+            i.shader->update();
 
             if (i.texture) //if not NULL
                 i.texture->use();

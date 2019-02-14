@@ -36,6 +36,8 @@ namespace gl {
          : count(count), type(type), normalized(normalized) {}
     };
 
+    class Shader;
+
     class VertexBufferLayout { //v1.1
     private:
     
@@ -48,6 +50,8 @@ namespace gl {
          : list(other.list) , stride(other.stride) {}
         VertexBufferLayout() : stride(0) {}
         ~VertexBufferLayout() {}
+
+        VertexBufferLayout& genFromShaderAttrib(const gl::Shader&);
 
         bool operator == (const VertexBufferLayout& other) const
          { return (this->getScheme() == other.getScheme()); }
