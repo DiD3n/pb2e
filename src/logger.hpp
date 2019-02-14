@@ -56,7 +56,8 @@ void showLogo(void);
     #define cppToString(x) #x
 
     /* Info */
-    #define logInfo(args...) _logInfo(args, " :", __FILE__, "\b:",__LINE__)
+    //#define logInfo(args...) _logInfo(args, " :", __FILE__, "\b:",__LINE__)
+    #define logInfo(args...) _logInfo(args)
 
     template<typename ... T>
     inline void _logInfo(const T&...args) {
