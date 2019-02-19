@@ -33,7 +33,7 @@ void pushData(void* data, const T& arg,const T2&... args) {
 namespace gl {
 
     template<typename T, typename ... T2>
-    void VertexBuffer::push(const T& arg,const T2&... args) {
+    void VertexBuffer::push(const T& arg, const T2&... args) {
 
         if (vbl.stride == sizeOfMulti(arg,args...)) {
 
