@@ -9,9 +9,9 @@
 #include "include/glew.hpp"
 #include "include/glm.hpp"
 
-#include "gl/VertexBufferLayout.hpp"
-#include "gl/VertexBuffer.hpp"
-#include "gl/Shader.hpp"
+#include "gl/buffer/VertexBufferLayout.hpp"
+#include "gl/buffer/VertexBuffer.hpp"
+#include "gl/shader/Shader.hpp"
 #include "gl/Texture.hpp"
 #include "gl/VectorType.hpp"
 #include "gl/RectType.hpp"
