@@ -5,7 +5,7 @@
 #include <list>
 #include <array>
 
-#include "VertexBuffer.hpp"
+#include "buffer/VertexBuffer.hpp"
 #include "Texture.hpp"
 #include "Shader.hpp"
 #include "ColorType.hpp"

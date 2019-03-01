@@ -1,6 +1,6 @@
 #include "VertexBufferLayout.hpp"
 
-#include "Shader.hpp"
+#include "../Shader.hpp"
 
 namespace gl {
 

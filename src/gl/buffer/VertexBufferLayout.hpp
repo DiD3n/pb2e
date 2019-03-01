@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-#include "../include/glew.hpp"
+#include "../../include/glew.hpp"
 
 namespace gl {
 

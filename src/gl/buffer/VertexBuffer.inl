@@ -1,7 +1,7 @@
 #include "VertexBuffer.hpp"
 
-#include "../logger.hpp"
-#include "../include/glew.hpp"
+#include "../../logger.hpp"
+#include "../../include/glew.hpp"
 
 constexpr unsigned int sizeOfMulti() {
     return 0;

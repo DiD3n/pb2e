@@ -4,8 +4,8 @@
 #include "ColorType.hpp"
 #include "RectType.hpp"
 
-#include "VertexBufferLayout.hpp"
-#include "VertexBuffer.hpp"
+#include "buffer/VertexBufferLayout.hpp"
+#include "buffer/VertexBuffer.hpp"
 
 
 #include "Uniform.hpp"
