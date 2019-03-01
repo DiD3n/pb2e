@@ -8,8 +8,8 @@
 #include "buffer/VertexBuffer.hpp"
 
 
-#include "Uniform.hpp"
-#include "Shader.hpp"
+#include "shader/Uniform.hpp"
+#include "shader/Shader.hpp"
 
 #include "Texture.hpp"
 

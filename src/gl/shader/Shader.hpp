@@ -5,8 +5,8 @@
 #include <typeinfo>
 #include <functional>
 
-#include "../include/glew.hpp"
-#include "buffer/VertexBuffer.hpp"
+#include "../../include/glew.hpp"
+#include "../buffer/VertexBuffer.hpp"
 #include "Uniform.hpp"
 
 namespace gl {

@@ -1,8 +1,8 @@
 #include "Uniform.hpp"
 
 #include <typeinfo>
-#include "../logger.hpp"
-#include "../include/glm.hpp"
+#include "../../logger.hpp"
+#include "../../include/glm.hpp"
 
 template<typename T>
 static void pushDataArray(T* data, const T& arg) {

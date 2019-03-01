@@ -1,6 +1,6 @@
 #include "Uniform.hpp"
 
-#include "../logger.hpp"
+#include "../../logger.hpp"
 
 namespace gl {
 

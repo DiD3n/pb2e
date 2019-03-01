@@ -7,7 +7,7 @@
 
 #include "buffer/VertexBuffer.hpp"
 #include "Texture.hpp"
-#include "Shader.hpp"
+#include "shader/Shader.hpp"
 #include "ColorType.hpp"
 
 
