@@ -15,8 +15,7 @@
 namespace gui {
 
 	class Object { //0.8v
-	private:
-	public:
+	protected:
 		std::string name;
 		gl::Rectf rect;
 		bool pressed, hovered, clicked, active;
@@ -27,7 +26,7 @@ namespace gui {
 
 		std::vector<std::shared_ptr<gui::Object>> childrens;
 
-		Object(const std::string& name, const std::shared_ptr<Style>& style)
+		Object(const std::string& name, const std::shared_ptr<const Style>& style)
 		 : name(name) , rect(0,0,256,255) , style(style) {}
 		Object(const Object& other)
 		 : name(name) , rect(rect) , style(style) , childrens(childrens) {};
