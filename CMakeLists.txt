@@ -29,7 +29,7 @@ if (${WIN32})
     #SDL2
     target_link_libraries(pb2e -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf)# -lSDL2_mixer)
     #GL
-    target_link_libraries(pb2e -lglew32s -lOpenGL32 -lGLU32)
+    target_link_libraries(pb2e -lglew32 -lOpenGL32 -lGLU32)
     #WINDOWS
     target_link_libraries(pb2e -lKernel32 -lPsapi)
 
