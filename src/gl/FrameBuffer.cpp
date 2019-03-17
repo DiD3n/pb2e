@@ -3,26 +3,33 @@
 #include "../logger.hpp"
 #include "../include/glew.hpp"
 
-namespace gl {
+namespace gl
+{
 
     FrameBuffer::FrameBuffer(const Vector2ui& size)
-     : size(size) , texture(nullptr) , legit(true) {
+     : size(size) , texture(nullptr) , legit(true)
+    {
         GLCall(glGenFramebuffers(1,&id));
         setup();
     }
+
     FrameBuffer::FrameBuffer(const FrameBuffer& other)
-     : size(other.size) , texture(nullptr) , legit(true) {
+     : size(other.size) , texture(nullptr) , legit(true)
+    {
         GLCall(glGenFramebuffers(1,&id));
         setup();
     }
-    FrameBuffer::~FrameBuffer() {
+
+    FrameBuffer::~FrameBuffer()
+    {
         GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
         GLCall(glDeleteFramebuffers(1,&id));
         if (texture != nullptr)
             delete texture;
     }
 
-    void FrameBuffer::setup() {
+    void FrameBuffer::setup()
+    {
         if (texture != nullptr)
             delete texture;
         
@@ -40,9 +47,11 @@ namespace gl {
 
         use(false);
 
-        if (!legit) {
+        if (!legit)
+        {
             logInfo("FrameBuffer::setup() - Somthing gone wrong!");
-            switch (err) {
+            switch (err)
+            {
                 case GL_FRAMEBUFFER_UNSUPPORTED:                      logInfo("FrameBuffer::setup() - GL_FRAMEBUFFER_UNSUPPORTED");
                 return;
                 case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:            logInfo("FrameBuffer::setup() - GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT");
@@ -57,21 +66,27 @@ namespace gl {
         }
     }
 
-    void FrameBuffer::clear() {
+    void FrameBuffer::clear()
+    {
         use();
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    void FrameBuffer::setSize(const Vector2ui& size) {
+    void FrameBuffer::setSize(const Vector2ui& size)
+    {
         this->size = size;
         texture->setSize(size);
     }
 
-    void FrameBuffer::use(bool bind) const {
+    void FrameBuffer::use(bool bind) const
+    {
         static unsigned int lastID;
-        if (legit) {
-            if (bind) {
-                if (lastID != id) {
+        if (legit)
+        {
+            if (bind)
+            {
+                if (lastID != id)
+                {
                     lastID = id;
                     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, id));
                 }
@@ -79,10 +94,11 @@ namespace gl {
             }
         }
             
-        if (lastID != 0) {
+        if (lastID != 0)
+        {
             lastID = 0;
             GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
         }
     }
 
-};
+}; //namespace gl

@@ -6,8 +6,8 @@
 namespace gl {
 
     VertexBuffer::VertexBuffer(const VertexBuffer& other)
-	 : VertexBuffer(other.vbl) {
-
+	 : VertexBuffer(other.vbl)
+    {
         /* coping the data */
 
         if (other.maxSize == 0)
@@ -20,8 +20,8 @@ namespace gl {
         dataSize = other.dataSize;
     }
 
-    VertexBuffer::VertexBuffer(const VertexBufferLayout& vbl) : vbl(vbl) {
-
+    VertexBuffer::VertexBuffer(const VertexBufferLayout& vbl) : vbl(vbl)
+    {
         /* some gl stuff */
 
         GLCall(glGenVertexArrays(1, &VAOID));
@@ -33,7 +33,8 @@ namespace gl {
         /*  layout setting  */
         
         int offset = 0;
-        for (int i = 0; i < this->vbl.list.size(); i++) {
+        for (int i = 0; i < this->vbl.list.size(); i++)
+        {
 
             GLCall(glVertexAttribPointer(i , this->vbl.list[i].count , this->vbl.list[i].type , (int)this->vbl.list[i].normalized , this->vbl.stride , (const void*)offset));
             GLCall(glEnableVertexAttribArray(i));
@@ -46,7 +47,8 @@ namespace gl {
 
     }
 
-    VertexBuffer::~VertexBuffer() {
+    VertexBuffer::~VertexBuffer()
+    {
         
         GLCall(glDeleteBuffers(1, &BufferID));
         GLCall(glDeleteVertexArrays(1, &VAOID));
@@ -55,12 +57,14 @@ namespace gl {
     }
 
 
-    void VertexBuffer::reserve(unsigned int size) {
+    void VertexBuffer::reserve(unsigned int size)
+    {
         maxSize += size*vbl.stride;
         data = (void*)realloc((void*)data, maxSize);
     }
 
-    VertexBuffer& VertexBuffer::clear() {
+    VertexBuffer& VertexBuffer::clear()
+    {
 
         free(data);
         data = nullptr;
@@ -70,10 +74,12 @@ namespace gl {
         return *this;
     }
 
-    void VertexBuffer::use() const {
+    void VertexBuffer::use() const
+    {
         static unsigned int lastID;
 
-        if (lastID != VAOID) {
+        if (lastID != VAOID)
+        {
             lastID = VAOID;
             
             GLCall(glBindVertexArray(VAOID));

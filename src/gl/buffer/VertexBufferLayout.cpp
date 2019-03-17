@@ -2,9 +2,11 @@
 
 #include "../shader/Shader.hpp"
 
-namespace gl {
+namespace gl
+{
 
-    VertexBufferLayout& VertexBufferLayout::genFromShaderAttrib(const gl::Shader& shader) {
+    VertexBufferLayout& VertexBufferLayout::genFromShaderAttrib(const gl::Shader& shader)
+    {
         if (stride)
             logWarn("gl::vbl::genFromShaderAttrib() - layout isn't empty! ... ignoring");
 
@@ -17,7 +19,8 @@ namespace gl {
         logInfo("gl::vbl::baseOnShader() - Generating layout based on shader attributes!");
         logInfo("gl::vbl::baseOnShader() - Attributes count:",count,"...\nFound:");
 
-        for (unsigned int i = 0; i < count ;i++) {
+        for (unsigned int i = 0; i < count; i++)
+        {
 
             char name[bufferSize];
 
@@ -28,7 +31,8 @@ namespace gl {
 
             logInfo("> { name:",&name[0],", type:",type,", size:",size,"}");
 
-            switch(type) {
+            switch(type)
+            {
                 case GL_FLOAT:        this->push(1, GL_FLOAT);        continue;
                 case GL_FLOAT_VEC2: case GL_FLOAT_VEC3: case GL_FLOAT_VEC4:
                 this->push((type - GL_FLOAT_VEC2) + 2, GL_FLOAT);
@@ -51,31 +55,37 @@ namespace gl {
         return *this;
     }
 
-    VertexBufferLayout& VertexBufferLayout::operator += (const LayoutElement& element) {
+    VertexBufferLayout& VertexBufferLayout::operator += (const LayoutElement& element)
+    {
         list.push_back(element);
         stride += list.back().count * list.back().getTypeSize();
         return *this;
     }
 
-    VertexBufferLayout& VertexBufferLayout::operator << (const LayoutElement& element) {
+    VertexBufferLayout& VertexBufferLayout::operator << (const LayoutElement& element)
+    {
         *this += element;
         return *this;
     }
 
-    LayoutElement VertexBufferLayout::operator -- () {
+    LayoutElement VertexBufferLayout::operator -- ()
+    {
         LayoutElement tmp(list.back());
         this->list.pop_back();
         return tmp;
     }
 
-    VertexBufferLayout& VertexBufferLayout::push(unsigned int count, unsigned int type, bool normalized) {
+    VertexBufferLayout& VertexBufferLayout::push(unsigned int count, unsigned int type, bool normalized)
+    {
         *this += {count,type,normalized};
         return *this;
     }
 
-    std::string VertexBufferLayout::getScheme() const {
+    std::string VertexBufferLayout::getScheme() const
+    {
         std::string tmp = "";
-        for (const LayoutElement& i : list) {
+        for (const LayoutElement& i : list)
+        {
             if (tmp != "")
                 tmp += " | ";
             tmp += std::to_string(i.count) + "x";
@@ -103,4 +113,4 @@ namespace gl {
         return tmp;
     }
 
-};
+}; //namespace gl

@@ -2,25 +2,30 @@
 
 #include "../../logger.hpp"
 
-namespace gl {
+namespace gl
+{
 
     Uniform::Uniform(const Uniform& other)
-     : pointable(other.pointable) , type(other.type) , size(other.size) {
+     : pointable(other.pointable) , type(other.type) , size(other.size)
+    {
 
-        if (pointable) {
+        if (pointable)
+        {
             data = other.data;
         }
-        else {
+        else
+        {
             data = (void*)realloc((void*)data, size);
             memcpy(data, other.data, size);
         }
         
     }
 
-    Uniform::~Uniform() {
+    Uniform::~Uniform()
+    {
         if (!pointable) 
             free(data);
     }
     
-}
+} //namespace gl
 
