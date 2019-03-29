@@ -28,9 +28,9 @@ namespace gl
     /* Texture */
 
     Texture::Texture(const std::string& path, const TextureFiltering& filter)
-     : path(path) , filter(filter)
+     : path(path) , filter(filter) , legit(true) /* only for loading process */
     {
-        GLCall(glGenTextures(1,&id));
+        GLCall(glGenTextures(1, &id));
         legit = this->load();
 
         if (legit)
@@ -73,7 +73,7 @@ namespace gl
         surface = IMG_Load(this->path.c_str());
         if (surface == NULL)
         {
-            logError("gl::Texture::load(",path,") - IMG_Load");
+            logError("gl::Texture::load(", path, ") - IMG_Load");
         } 
         else
         {
@@ -119,6 +119,7 @@ namespace gl
 
     bool Texture::reload() //TODO: Dynamic reload
     {
+        logWarn("gl::Texture::reload() - WIP");
         return true;
     }
 
