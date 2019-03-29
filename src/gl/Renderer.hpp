@@ -11,9 +11,11 @@
 #include "ColorType.hpp"
 
 
-namespace gl {
+namespace gl
+{
 
-    enum Shape : unsigned char {
+    enum Shape : unsigned char
+    {
         none      = 0,
         point     = 1,
         line      = 2,
@@ -22,12 +24,14 @@ namespace gl {
         //TODO: Add circle??
     };
 
-    struct BufferDB {
+    struct BufferDB
+    {
         VertexBuffer buffer;
         const Texture* const texture;
         const Shader* const shader;
         std::vector<unsigned int> ibo;
         bool basic;
+
         BufferDB(const BufferDB& other)
          : buffer(other.buffer) , texture(other.texture) , shader(other.shader) , basic(other.basic) , ibo(other.ibo) {}
         BufferDB(const VertexBufferLayout& layout, const Texture& texture, const Shader& shader)
@@ -36,7 +40,8 @@ namespace gl {
          : buffer(layout) , texture(nullptr) , shader(&shader) , basic(false) {}
     };
 
-    class Renderer {
+    class Renderer
+    {
     private:
         std::vector<BufferDB> buffers;
 
@@ -63,6 +68,6 @@ namespace gl {
 
     };
 
-};
+}; //namespace gl
 
 #include "Renderer.inl"

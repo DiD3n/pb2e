@@ -1,9 +1,11 @@
 #pragma once
 
 
-namespace gl {
+namespace gl
+{
 
-    enum UniformType : int {
+    enum UniformType : int
+    {
         vec1f   = 0,   vec1ui  = 1,   vec1i   = 2,   vec1d = 3, 
         vec2f   = 20,  vec2ui  = 21,  vec2i   = 22,  vec2d = 23,
         vec3f   = 30,  vec3ui  = 31,  vec3i   = 32,  vec3d = 33,
@@ -12,7 +14,8 @@ namespace gl {
         mat2    = 50,  mat3    = 51,  mat4    = 52,
     };
 
-    struct Uniform {
+    struct Uniform
+    {
         void* data;
         const unsigned int size;
         UniformType type;

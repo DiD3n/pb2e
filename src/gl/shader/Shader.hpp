@@ -9,28 +9,26 @@
 #include "../buffer/VertexBuffer.hpp"
 #include "Uniform.hpp"
 
-namespace gl {
+namespace gl
+{
 
-    struct UniformData {
+    struct UniformData
+    {
         const std::string name;
         int id;
         Uniform* uniform;
-        void replaceUniform(const Uniform& newUniform) {
-            if (uniform)
-                delete uniform;
-            uniform = new gl::Uniform(newUniform);
-        }   
+
         UniformData(const std::string& name, const int& id, const Uniform& uniform)
          : uniform(new gl::Uniform(uniform)), name(name), id(id) {}
-        ~UniformData() {
-            if (uniform)
-                delete uniform;
-        }
+        ~UniformData();
+
+        void replaceUniform(const Uniform& newUniform); 
     };
 
     class VertexBufferLayout;
 
-    class Shader {
+    class Shader
+    {
     private:
         std::vector<UniformData> uniformList;
         bool legit;
@@ -42,7 +40,6 @@ namespace gl {
         void updateShaderUniform(const UniformData&) const;
 
     public:
-
 
         Shader(const Shader&);
 
@@ -67,4 +64,5 @@ namespace gl {
 
         friend VertexBufferLayout;
     };
-};
+    
+}; //namespace gl

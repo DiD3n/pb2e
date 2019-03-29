@@ -40,6 +40,19 @@ static bool compileShader(int type, unsigned int& shader,const std::string& sour
 namespace gl
 {
 
+    void UniformData::replaceUniform(const Uniform& newUniform)
+    {
+        if (uniform)
+            delete uniform;
+        uniform = new gl::Uniform(newUniform);
+    }   
+
+    UniformData::~UniformData() {
+        if (uniform)
+            delete uniform;
+    }
+
+
     Shader::Shader(const Shader& other)
     {
         Shader(other.vertexSourcePath,other.fragmentSourcePath);
@@ -49,7 +62,8 @@ namespace gl
     : vertexSourcePath(vertexSourcePath) , fragmentSourcePath(fragmentSourcePath)
     {
         GLCall(programID = glCreateProgram()); 
-        if (this->compile(programID)) {
+        if (this->compile(programID))
+        {
             legit = true;
             logInfo("gl::Shader::Shader() - ready!");
         }

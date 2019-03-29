@@ -20,7 +20,8 @@ namespace gl {
         dataSize = other.dataSize;
     }
 
-    VertexBuffer::VertexBuffer(const VertexBufferLayout& vbl) : vbl(vbl)
+    VertexBuffer::VertexBuffer(const VertexBufferLayout& vbl)
+     : vbl(vbl)
     {
         /* some gl stuff */
 

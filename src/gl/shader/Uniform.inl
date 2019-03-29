@@ -5,22 +5,26 @@
 #include "../../include/glm.hpp"
 
 template<typename T>
-static void pushDataArray(T* data, const T& arg) {
+static void pushDataArray(T* data, const T& arg)
+{
     data[0] = arg; 
 }
 
 template<typename T, typename ... T2>
-static void pushDataArray(T* data, const T& arg, const T2&... args) {
+static void pushDataArray(T* data, const T& arg, const T2&... args)
+{
     data[0] = arg;
     pushDataArray(data + 1, args...);
 }
 
-namespace gl {
+namespace gl
+{
 
     
     template<typename T, typename ... T2>
     Uniform::Uniform(const T& arg, const T2&... args)
-     : pointable(false) , size(sizeOfMulti(arg,args...)) {
+     : pointable(false) , size(sizeOfMulti(arg,args...))
+     {
             
         int dataCount = size/sizeof(T);
              if (typeid(T) == typeid(float))        this->type = (UniformType)(10 * dataCount + 0);
@@ -35,7 +39,8 @@ namespace gl {
 
     template<typename T>
     Uniform::Uniform(bool pointable, T& arg)
-    : pointable(pointable) , size(sizeof(size)) {
+    : pointable(pointable) , size(sizeof(size))
+    {
 
              if (typeid(T) == typeid(float))        this->type = vec1f; 
         else if (typeid(T) == typeid(int))          this->type = vec1i; 
@@ -45,14 +50,15 @@ namespace gl {
         else if (typeid(T) == typeid(glm::mat3))    this->type = mat3;
         else if (typeid(T) == typeid(glm::mat4))    this->type = mat4;
         
-        if (pointable) {
+        if (pointable)
+        {
             data = &arg;
         }   
-        else {
+        else
+        {
             data = malloc(sizeof(T));
             pushDataArray((T*)data,arg);
         } 
     }
 
-
-};
+}; //namespace gl
