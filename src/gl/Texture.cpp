@@ -119,8 +119,28 @@ namespace gl
 
     bool Texture::reload() //TODO: Dynamic reload
     {
-        logWarn("gl::Texture::reload() - WIP");
-        return true;
+
+        if (path == "")
+            return true;
+        
+        unsigned int oldTexture = id;
+
+        GLCall(glGenTextures(1,&id));
+        bool status = this->load();
+
+        if (status)
+        {
+            GLCall(glDeleteTextures(1, &oldTexture));
+            logInfo("gl::Texture::reload() - done!");
+            return true;
+        }
+        else
+        {
+            GLCall(glDeleteTextures(1, &this->id));
+            id = oldTexture;
+            logWarn("gl::Texture::reload() - Something fucked up! Restoring previous texture!");
+            return false;
+        }
     }
 
     void Texture::setSize(const Vector2ui& size)
@@ -145,6 +165,10 @@ namespace gl
                 }
                 return;
             }
+        }
+        else
+        {
+            logWarn("gl::Texture::use() - I'm not legit! something fucked up!");
         }
 
         if (lastID != 0)
