@@ -3,17 +3,19 @@
 #include "Texture.hpp"
 #include "VectorType.hpp"
 
-namespace gl {
+namespace gl
+{
 
-    class FrameBuffer {
-        private:
+    class FrameBuffer
+    {
+    private:
         unsigned int id;
         Vector2ui size;
         gl::Texture* texture;
         bool legit;
         
         void setup();
-        public:
+    public:
 
         FrameBuffer(const Vector2ui&);
         FrameBuffer(const FrameBuffer&);
@@ -32,4 +34,4 @@ namespace gl {
         operator const gl::SubTexture() {return {*texture};}
     };
 
-};
+}; //namespace gl

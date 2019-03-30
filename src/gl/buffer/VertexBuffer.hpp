@@ -3,13 +3,13 @@
 #include "VertexBufferLayout.hpp"
 
 
-namespace gl {
-
+namespace gl
+{
     class Renderer;
 
-    class VertexBuffer { //TODO: optimization
+    class VertexBuffer //TODO: optimization
+    { 
     private:
-
         void* data = nullptr;
         unsigned int dataSize = 0, maxSize = 0;
         
@@ -35,8 +35,10 @@ namespace gl {
         VertexBuffer& clear();
 
         void use() const;
+        
         friend Renderer;
     };
 
-};
+}; //namespace gl
+
 #include "VertexBuffer.inl"

@@ -8,7 +8,7 @@ namespace gl {
     VertexBuffer::VertexBuffer(const VertexBuffer& other)
 	 : VertexBuffer(other.vbl)
     {
-        /* coping the data */
+        /* copying data */
 
         if (other.maxSize == 0)
             return;
@@ -23,7 +23,7 @@ namespace gl {
     VertexBuffer::VertexBuffer(const VertexBufferLayout& vbl)
      : vbl(vbl)
     {
-        /* some gl stuff */
+        /* creating VAO & buffer */
 
         GLCall(glGenVertexArrays(1, &VAOID));
         GLCall(glBindVertexArray(VAOID));
